@@ -32,59 +32,8 @@ func initialize_project_settings() -> void:
 		config_base_url.migrate_deprecated_1_5_0_base_url()
 	
 	# Version 1.6.0 cleanup - delete API key files and project settings
-	# Виконуємо міграцію з використанням прямих значень констант
-	var config_gemini = LLMConfigManager.new("gemini_api")
-	var dummy := LLMProviderResource.new()
-	dummy.api_id = "dummy"
-	
-	# Спробуємо створити GeminiAPI, якщо він доступний
-	var gemini_script = load("res://addons/ai_assistant_hub/llm_apis/gemini_api.gd")
-	if gemini_script:
-		var gemini_api = gemini_script.new(dummy)
-		if gemini_api:
-			var old_key = ""
-			if ProjectSettings.has_setting("plugins/ai_assistant_hub/gemini_api_key"):
-				old_key = ProjectSettings.get_setting("plugins/ai_assistant_hub/gemini_api_key", "")
-			if old_key.is_empty() and FileAccess.file_exists("res://addons/ai_assistant_hub/llm_apis/gemini_api_key.gd"):
-				var file = FileAccess.open("res://addons/ai_assistant_hub/llm_apis/gemini_api_key.gd", FileAccess.READ)
-				if file:
-					old_key = file.get_as_text().strip_edges()
-					file.close()
-			if not old_key.is_empty():
-				config_gemini.save_key(old_key)
-				ProjectSettings.set_setting("plugins/ai_assistant_hub/gemini_api_key", null)
-				ProjectSettings.save()
-	
-	var config_openrouter = LLMConfigManager.new("openrouter_api")
-	var openrouter_script = load("res://addons/ai_assistant_hub/llm_apis/openrouter_api.gd")
-	if openrouter_script:
-		var openrouter_api = openrouter_script.new(dummy)
-		if openrouter_api:
-			var old_key = ""
-			if ProjectSettings.has_setting("plugins/ai_assistant_hub/openrouter_api_key"):
-				old_key = ProjectSettings.get_setting("plugins/ai_assistant_hub/openrouter_api_key", "")
-			if old_key.is_empty() and FileAccess.file_exists("res://addons/ai_assistant_hub/llm_apis/openrouter_api_key.gd"):
-				var file = FileAccess.open("res://addons/ai_assistant_hub/llm_apis/openrouter_api_key.gd", FileAccess.READ)
-				if file:
-					old_key = file.get_as_text().strip_edges()
-					file.close()
-			if not old_key.is_empty():
-				config_openrouter.save_key(old_key)
-				ProjectSettings.set_setting("plugins/ai_assistant_hub/openrouter_api_key", null)
-				ProjectSettings.save()
-	
-	var config_openwebui = LLMConfigManager.new("openwebui_api")
-	var openwebui_script = load("res://addons/ai_assistant_hub/llm_apis/openwebui_api.gd")
-	if openwebui_script:
-		var openwebui_api = openwebui_script.new(dummy)
-		if openwebui_api:
-			var old_key = ""
-			if ProjectSettings.has_setting("plugins/ai_assistant_hub/openwebui_api_key"):
-				old_key = ProjectSettings.get_setting("plugins/ai_assistant_hub/openwebui_api_key", "")
-			if not old_key.is_empty():
-				config_openwebui.save_key(old_key)
-				ProjectSettings.set_setting("plugins/ai_assistant_hub/openwebui_api_key", null)
-				ProjectSettings.save()
+	# Міграція виконується без створення екземплярів API класів, щоб уникнути помилок компіляції
+	call_deferred("_migrate_deprecated_api_keys")
 	
 	if ProjectSettings.get_setting(CONFIG_LLM_API, "").is_empty():
 		# In the future we can consider moving this back to simply:
@@ -165,3 +114,46 @@ func new_llm(llm_provider:LLMProviderResource) -> LLMInterface:
 
 func get_current_llm_provider() -> LLMProviderResource:
 	return _hub_dock.get_selected_llm_resource()
+
+
+## Міграція застарілих API ключів (викликається відкладено, щоб уникнути помилок компіляції)
+func _migrate_deprecated_api_keys() -> void:
+	# Міграція Gemini API ключа
+	var config_gemini = LLMConfigManager.new("gemini_api")
+	var old_key_gemini = ""
+	if ProjectSettings.has_setting("plugins/ai_assistant_hub/gemini_api_key"):
+		old_key_gemini = ProjectSettings.get_setting("plugins/ai_assistant_hub/gemini_api_key", "")
+	if old_key_gemini.is_empty() and FileAccess.file_exists("res://addons/ai_assistant_hub/llm_apis/gemini_api_key.gd"):
+		var file = FileAccess.open("res://addons/ai_assistant_hub/llm_apis/gemini_api_key.gd", FileAccess.READ)
+		if file:
+			old_key_gemini = file.get_as_text().strip_edges()
+			file.close()
+	if not old_key_gemini.is_empty():
+		config_gemini.save_key(old_key_gemini)
+		ProjectSettings.set_setting("plugins/ai_assistant_hub/gemini_api_key", null)
+	
+	# Міграція OpenRouter API ключа
+	var config_openrouter = LLMConfigManager.new("openrouter_api")
+	var old_key_openrouter = ""
+	if ProjectSettings.has_setting("plugins/ai_assistant_hub/openrouter_api_key"):
+		old_key_openrouter = ProjectSettings.get_setting("plugins/ai_assistant_hub/openrouter_api_key", "")
+	if old_key_openrouter.is_empty() and FileAccess.file_exists("res://addons/ai_assistant_hub/llm_apis/openrouter_api_key.gd"):
+		var file = FileAccess.open("res://addons/ai_assistant_hub/llm_apis/openrouter_api_key.gd", FileAccess.READ)
+		if file:
+			old_key_openrouter = file.get_as_text().strip_edges()
+			file.close()
+	if not old_key_openrouter.is_empty():
+		config_openrouter.save_key(old_key_openrouter)
+		ProjectSettings.set_setting("plugins/ai_assistant_hub/openrouter_api_key", null)
+	
+	# Міграція OpenWebUI API ключа
+	var config_openwebui = LLMConfigManager.new("openwebui_api")
+	var old_key_openwebui = ""
+	if ProjectSettings.has_setting("plugins/ai_assistant_hub/openwebui_api_key"):
+		old_key_openwebui = ProjectSettings.get_setting("plugins/ai_assistant_hub/openwebui_api_key", "")
+	if not old_key_openwebui.is_empty():
+		config_openwebui.save_key(old_key_openwebui)
+		ProjectSettings.set_setting("plugins/ai_assistant_hub/openwebui_api_key", null)
+	
+	# Зберігаємо зміни в ProjectSettings
+	ProjectSettings.save()
