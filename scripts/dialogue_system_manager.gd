@@ -1,7 +1,7 @@
 extends Node
-class_name DialogueSystemManager
 ## Централізована система керування діалогами та персонажами
 ## Замінює hardcode логіку на функції
+## ⚠️ Autoload скрипт - НЕ використовуй class_name!
 
 signal character_talked(character_id: String)
 signal limit_reached()
@@ -11,7 +11,7 @@ signal all_conversations_completed()
 var characters: Dictionary = {}
 
 ## Посилання на SaveSystem (autoload)
-var save_system: SaveSystem:
+var save_system:
 	get:
 		return get_node("/root/SaveSystem")
 

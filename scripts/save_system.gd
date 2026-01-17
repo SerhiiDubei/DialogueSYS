@@ -1,6 +1,6 @@
 extends Node
-class_name SaveSystem
 ## Система збереження прогресу діалогів
+## ⚠️ Autoload скрипт - НЕ використовуй class_name!
 
 # ⚠️ ЛІМІТ: можна говорити тільки з 2 персонажами з 4!
 const MAX_CONVERSATIONS: int = 2

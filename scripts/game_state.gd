@@ -14,11 +14,11 @@ var agreed_dana: bool = false
 var agreed_ira: bool = false
 
 # Посилання на системи (autoload) - getter для надійності
-var save_system: SaveSystem:
+var save_system:
 	get:
 		return get_node("/root/SaveSystem")
 
-var dialogue_system: DialogueSystemManager:
+var dialogue_system:
 	get:
 		return get_node("/root/DialogueSystemManager")
 
