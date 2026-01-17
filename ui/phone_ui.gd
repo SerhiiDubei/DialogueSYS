@@ -28,6 +28,9 @@ extends Control
 @onready var detail_favorite_button: Button = %FavoriteButton
 @onready var detail_block_button: Button = %BlockButton
 
+# Екран чату
+@onready var chat_screen: Panel = %ChatScreen
+
 ## Шаблон для елементу контакту
 var contact_entry_scene = preload("res://ui/contact_entry.tscn")
 
