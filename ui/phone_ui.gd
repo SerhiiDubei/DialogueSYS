@@ -24,6 +24,7 @@ extends Control
 @onready var detail_last_call: Label = %DetailLastCall
 @onready var detail_status: Label = %DetailStatus
 @onready var detail_call_button: Button = %CallContactButton
+@onready var detail_chat_button: Button = %ChatContactButton
 @onready var detail_favorite_button: Button = %FavoriteButton
 @onready var detail_block_button: Button = %BlockButton
 
