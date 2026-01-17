@@ -28,11 +28,12 @@ extends Control
 @onready var detail_favorite_button: Button = %FavoriteButton
 @onready var detail_block_button: Button = %BlockButton
 
-# Екран чату
-@onready var chat_screen: Panel = %ChatScreen
-
 ## Шаблон для елементу контакту
 var contact_entry_scene = preload("res://ui/contact_entry.tscn")
+
+## Сцена чату
+var chat_screen_scene = preload("res://ui/chat_screen.tscn")
+var chat_screen: Control = null
 
 ## Поточний режим
 enum Tab { FAVORITES, RECENT, CONTACTS }
@@ -60,13 +61,12 @@ func _ready():
 	detail_favorite_button.pressed.connect(_on_detail_favorite_pressed)
 	detail_block_button.pressed.connect(_on_detail_block_pressed)
 	
-	# Підключити сигнал чату
-	chat_screen.back_pressed.connect(_on_chat_back_pressed)
-	
-	# Ховати екран дзвінку, деталей та чату
+	# Ховати екран дзвінку та деталей
 	call_screen.visible = false
 	detail_screen.visible = false
-	chat_screen.visible = false
+	
+	# Створити chat screen
+	_create_chat_screen()
 	
 	# Налаштувати вкладки
 	tab_bar.add_tab("⭐ Обрані")
@@ -351,6 +351,16 @@ func close_phone():
 	if !PhoneSystemManager.current_call_id.is_empty():
 		PhoneSystemManager.end_call(false)
 
+func _create_chat_screen():
+	# Створити екран чату динамічно
+	if !chat_screen_scene:
+		return
+	
+	chat_screen = chat_screen_scene.instantiate()
+	add_child(chat_screen)
+	chat_screen.visible = false
+	chat_screen.back_pressed.connect(_on_chat_back_pressed)
+
 ## ==========================================
 ## ДЕТАЛЬНА ІНФО ПРО КОНТАКТ
 ## ==========================================
@@ -425,6 +435,10 @@ func _on_detail_chat_pressed():
 	if current_detail_contact_id.is_empty():
 		return
 	
+	if !chat_screen:
+		_show_error("Chat screen не створено!")
+		return
+	
 	# Ховати деталі, показати чат
 	detail_screen.visible = false
 	phone_panel.visible = false
@@ -433,7 +447,8 @@ func _on_detail_chat_pressed():
 
 func _on_chat_back_pressed():
 	# Повернутись з чату
-	chat_screen.visible = false
+	if chat_screen:
+		chat_screen.visible = false
 	phone_panel.visible = true
 
 func _on_detail_favorite_pressed():
