@@ -10,8 +10,10 @@ signal all_conversations_completed()
 ## Конфігурація персонажів
 var characters: Dictionary = {}
 
-## Посилання на SaveSystem
-@onready var save_system: SaveSystem = get_node("/root/SaveSystem")
+## Посилання на SaveSystem (autoload)
+var save_system: SaveSystem:
+	get:
+		return get_node("/root/SaveSystem")
 
 func _ready():
 	print("🎮 DialogueSystemManager готовий!")
