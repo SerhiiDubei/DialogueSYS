@@ -12,6 +12,20 @@ extends Control
 @onready var call_timer: Label = %CallTimer
 @onready var hangup_button: Button = %HangupButton
 
+# Екран деталей контакту
+@onready var detail_screen: Panel = %ContactDetailScreen
+@onready var detail_back_button: Button = %BackButton
+@onready var detail_photo: TextureRect = %DetailPhoto
+@onready var detail_name: Label = %DetailName
+@onready var detail_phone: Label = %DetailPhone
+@onready var detail_description: Label = %DetailDescription
+@onready var detail_call_count: Label = %DetailCallCount
+@onready var detail_last_call: Label = %DetailLastCall
+@onready var detail_status: Label = %DetailStatus
+@onready var detail_call_button: Button = %CallContactButton
+@onready var detail_favorite_button: Button = %FavoriteButton
+@onready var detail_block_button: Button = %BlockButton
+
 ## Шаблон для елементу контакту
 var contact_entry_scene = preload("res://ui/contact_entry.tscn")
 
@@ -22,6 +36,7 @@ var current_tab: Tab = Tab.CONTACTS
 ## Поточний дзвінок
 var current_contact: ContactResource = null
 var call_timer_active: bool = false
+var current_detail_contact_id: String = ""
 
 func _ready():
 	# З'єднати сигнали
@@ -33,8 +48,15 @@ func _ready():
 	PhoneSystemManager.call_ended.connect(_on_call_ended)
 	PhoneSystemManager.contacts_loaded.connect(_refresh_list)
 	
-	# Ховати екран дзвінку
+	# Екран деталей
+	detail_back_button.pressed.connect(_on_detail_back_pressed)
+	detail_call_button.pressed.connect(_on_detail_call_pressed)
+	detail_favorite_button.pressed.connect(_on_detail_favorite_pressed)
+	detail_block_button.pressed.connect(_on_detail_block_pressed)
+	
+	# Ховати екран дзвінку та деталей
 	call_screen.visible = false
+	detail_screen.visible = false
 	
 	# Налаштувати вкладки
 	tab_bar.add_tab("⭐ Обрані")
@@ -87,6 +109,13 @@ func _add_contact_entry(contact: ContactResource):
 	# Налаштувати елемент
 	entry.setup(contact)
 	entry.call_pressed.connect(func(): _on_contact_call_pressed(contact.id))
+	
+	# Додати обробник натискання на весь контакт
+	entry.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton:
+			if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+				_show_contact_details(contact.id)
+	)
 
 func _show_recent_calls():
 	# Показати недавні дзвінки
@@ -311,3 +340,101 @@ func close_phone():
 	# Якщо йде дзвінок - завершити
 	if !PhoneSystemManager.current_call_id.is_empty():
 		PhoneSystemManager.end_call(false)
+
+## ==========================================
+## ДЕТАЛЬНА ІНФО ПРО КОНТАКТ
+## ==========================================
+
+func _show_contact_details(contact_id: String):
+	# Показати детальну інфо про контакт
+	var contact = PhoneSystemManager.get_contact(contact_id)
+	if !contact:
+		_show_error("Контакт не знайдено: " + contact_id)
+		return
+	
+	current_detail_contact_id = contact_id
+	
+	# Заповнити дані
+	detail_photo.texture = contact.photo if contact.photo else null
+	detail_name.text = contact.display_name
+	detail_phone.text = contact.phone_number
+	detail_description.text = contact.description if !contact.description.is_empty() else "Немає опису"
+	
+	# Статистика
+	var info = PhoneSystemManager.get_contact_info(contact_id)
+	detail_call_count.text = "📞 Дзвінків: %d" % info.get("call_count", 0)
+	
+	var last_call = info.get("last_call", 0.0)
+	if last_call > 0:
+		var time_dict = Time.get_datetime_dict_from_unix_time(int(last_call))
+		detail_last_call.text = "🕐 Останній дзвінок: %02d.%02d.%04d %02d:%02d" % [
+			time_dict.day, time_dict.month, time_dict.year,
+			time_dict.hour, time_dict.minute
+		]
+	else:
+		detail_last_call.text = "🕐 Останній дзвінок: немає"
+	
+	detail_status.text = "📊 Статус: " + info.get("status", "невідомий")
+	
+	# Кнопки
+	detail_call_button.disabled = !info.get("can_call", false)
+	
+	# Кнопка обраного
+	if contact.favorite:
+		detail_favorite_button.text = "⭐ Видалити з обраного"
+	else:
+		detail_favorite_button.text = "⭐ Додати в обране"
+	
+	# Кнопка блокування
+	if contact_id in PhoneSystemManager.blocked:
+		detail_block_button.text = "✅ Розблокувати"
+	else:
+		detail_block_button.text = "🚫 Заблокувати"
+	
+	# Показати екран
+	detail_screen.visible = true
+
+func _on_detail_back_pressed():
+	# Закрити екран деталей
+	detail_screen.visible = false
+	current_detail_contact_id = ""
+
+func _on_detail_call_pressed():
+	# Зателефонувати з екрану деталей
+	if current_detail_contact_id.is_empty():
+		return
+	
+	detail_screen.visible = false
+	_on_contact_call_pressed(current_detail_contact_id)
+
+func _on_detail_favorite_pressed():
+	# Додати/видалити з обраного
+	if current_detail_contact_id.is_empty():
+		return
+	
+	var contact = PhoneSystemManager.get_contact(current_detail_contact_id)
+	if !contact:
+		return
+	
+	if contact.favorite:
+		PhoneSystemManager.remove_from_favorites(current_detail_contact_id)
+		detail_favorite_button.text = "⭐ Додати в обране"
+	else:
+		PhoneSystemManager.add_to_favorites(current_detail_contact_id)
+		detail_favorite_button.text = "⭐ Видалити з обраного"
+	
+	_refresh_list()
+
+func _on_detail_block_pressed():
+	# Заблокувати/розблокувати
+	if current_detail_contact_id.is_empty():
+		return
+	
+	if current_detail_contact_id in PhoneSystemManager.blocked:
+		PhoneSystemManager.unblock_contact(current_detail_contact_id)
+		detail_block_button.text = "🚫 Заблокувати"
+	else:
+		PhoneSystemManager.block_contact(current_detail_contact_id)
+		detail_block_button.text = "✅ Розблокувати"
+	
+	detail_call_button.disabled = current_detail_contact_id in PhoneSystemManager.blocked
