@@ -1,0 +1,63 @@
+[gd_scene load_steps=3 format=3 uid="uid://dialogue_map_scene"]
+
+[ext_resource type="Script" path="res://scenes/dialogue_map.gd" id="1_dialogue_map"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="DialogueMap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dialogue_map")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.1, 1)
+
+[node name="WorldmapView" type="WorldmapView" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogueGraph" type="WorldmapGraph" parent="WorldmapView"]
+connection_mode = 1
+connection_min_length = 200.0
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -100.0
+offset_right = 300.0
+offset_bottom = -20.0
+grow_vertical = 0
+
+[node name="Title" type="Label" parent="UI"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Карта діалогів"
+horizontal_alignment = 1
+
+[node name="CurrentDialogue" type="Label" parent="UI"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Поточний діалог: -"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="UI"]
+layout_mode = 2
+text = "Запустити діалог"
