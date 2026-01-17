@@ -79,10 +79,6 @@ func _ready() -> void:
 	mutation_cooldown.timeout.connect(_on_mutation_cooldown_timeout)
 	add_child(mutation_cooldown)
 	
-	# Підключаємося до сигналу створення відповідей, щоб застосувати стилі до кнопок
-	if responses_menu:
-		responses_menu.response_focused.connect(_on_response_focused)
-	
 	# Налаштування кольорів контейнерів (викликаємо після того, як всі елементи готові)
 	call_deferred("_setup_colors")
 
