@@ -11,7 +11,7 @@ signal call_pressed()
 var contact_id: String = ""
 
 func setup(contact: ContactResource, call_data: Dictionary = {}):
-	"""Налаштувати елемент"""
+	# Налаштувати елемент
 	contact_id = contact.id
 	
 	# Фото
@@ -33,8 +33,11 @@ func setup(contact: ContactResource, call_data: Dictionary = {}):
 		info_label.text = contact.phone_number
 	
 	# Кнопка дзвінка
-	call_button.pressed.connect(_on_call_pressed)
-	call_button.disabled = !PhoneSystemManager.can_call(contact_id)
+	if call_button:
+		call_button.pressed.connect(_on_call_pressed)
+		call_button.disabled = !PhoneSystemManager.can_make_call(contact_id)
+	else:
+		push_error("CallButton не знайдено в contact_entry!")
 
 func _on_call_pressed():
 	call_pressed.emit()
