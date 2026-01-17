@@ -230,8 +230,17 @@ func _apply_button_styles() -> void:
 	if not responses_menu:
 		return
 	
-	# Визначаємо колір ободка залежно від поточного title
-	var is_main_menu: bool = (current_dialogue_title == "main_menu")
+	# Визначаємо колір ободка залежно від поточного dialogue_line.id
+	# Перевіряємо, чи поточний діалог належить до main_menu
+	var is_main_menu: bool = false
+	if is_instance_valid(dialogue_line):
+		# Якщо id починається з "main_menu" або містить "main_menu", це головне меню
+		var line_id = dialogue_line.id
+		if line_id.begins_with("main_menu") or "main_menu" in line_id:
+			is_main_menu = true
+	# Якщо dialogue_line ще не готовий, використовуємо збережене значення
+	elif current_dialogue_title == "main_menu":
+		is_main_menu = true
 	var border_color: Color
 	var bg_color_normal: Color
 	var bg_color_hover: Color
@@ -364,6 +373,13 @@ func apply_dialogue_line() -> void:
 	responses_menu.hide()
 	responses_menu.responses = dialogue_line.responses
 	
+	# Оновлюємо current_dialogue_title на основі поточного dialogue_line
+	# Якщо current_dialogue_title ще не встановлений, використовуємо логіку визначення
+	if current_dialogue_title.is_empty():
+		# За замовчуванням вважаємо, що це звичайний діалог (не main_menu)
+		current_dialogue_title = "other"
+		call_deferred("_setup_colors", "other")
+	
 	# Застосовуємо стилі до нових кнопок після їх створення
 	await get_tree().process_frame
 	_apply_button_styles()
@@ -401,6 +417,19 @@ func apply_dialogue_line() -> void:
 
 ## Go to the next line
 func next(next_id: String) -> void:
+	# Оновлюємо current_dialogue_title перед переходом до наступної лінії
+	# Якщо next_id веде до main_menu, встановлюємо current_dialogue_title = "main_menu"
+	# Якщо next_id веде до іншого title (наприклад, "перша_проба"), встановлюємо current_dialogue_title = "other"
+	if next_id == "main_menu" or "main_menu" in next_id:
+		current_dialogue_title = "main_menu"
+		call_deferred("_setup_colors", "main_menu")
+	elif next_id != "" and next_id != "END" and next_id != "NULL":
+		# Якщо next_id веде до іншого title (не main_menu), це звичайний діалог
+		# Перевіряємо, чи це не повернення до main_menu
+		if not ("main_menu" in next_id):
+			current_dialogue_title = "other"
+			call_deferred("_setup_colors", "other")
+	
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
 
 
