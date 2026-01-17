@@ -371,14 +371,22 @@ func start(with_dialogue_resource: DialogueResource = null, title: String = "", 
 	if not title.is_empty():
 		start_from_title = title
 		current_dialogue_title = title  # Зберігаємо поточний title для визначення стилю
+		
+		# DEBUG: Показуємо який title прийшов
+		print("🎯 Запуск діалогу з title: '", title, "'")
+		
 		# Визначаємо тип діалогу на основі title
 		if title == "main_menu":
 			dialogue_type = DialogueType.MAIN_MENU
-		elif title == "hub" or "talk_" in title:
+			print("   → Тип: MAIN_MENU (синій)")
+		elif title == "hub" or title.begins_with("talk_"):
 			# Якщо це hub або розмова з персонажем - це вибір персонажа
 			dialogue_type = DialogueType.CHARACTER_SELECTION
+			print("   → Тип: CHARACTER_SELECTION (зелений)")
 		else:
 			dialogue_type = DialogueType.DIALOGUE
+			print("   → Тип: DIALOGUE (червоний)")
+		
 		# Оновлюємо стиль залежно від типу
 		call_deferred("_setup_colors_by_type")
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(start_from_title, temporary_game_states)
