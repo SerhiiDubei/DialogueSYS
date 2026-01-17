@@ -4,12 +4,15 @@ extends Control
 @onready var main_menu_btn: Button = $VBoxContainer/MainMenuBtn
 @onready var persha_proba_btn: Button = $VBoxContainer/PershaProbaBnt
 @onready var dzhin_tolik_btn: Button = $VBoxContainer/DzhinTolikBtn
+@onready var phone_btn: Button = $VBoxContainer/PhoneBtn
 @onready var background: ColorRect = $Background
 @onready var title_label: Label = $Title
 @onready var vbox: VBoxContainer = $VBoxContainer
 
 var game_state: Node
 var dialogue_resource: DialogueResource
+var phone_ui_scene: PackedScene
+var phone_ui_instance: Control
 
 func _ready():
 	# Створюємо GameState
@@ -33,10 +36,16 @@ func _ready():
 		push_error("Не вдалося завантажити res://dialogue/demo.dialogue")
 		return
 	
+	# Завантажуємо сцену телефону
+	phone_ui_scene = load("res://ui/phone_ui.tscn")
+	if not phone_ui_scene:
+		push_error("Не вдалося завантажити res://ui/phone_ui.tscn")
+	
 	# Підключаємо кнопки
 	main_menu_btn.pressed.connect(func(): start_dialogue("main_menu"))
 	persha_proba_btn.pressed.connect(func(): start_dialogue("перша_проба"))
 	dzhin_tolik_btn.pressed.connect(func(): start_dialogue("джин_толік"))
+	phone_btn.pressed.connect(_on_phone_btn_pressed)
 	
 	# Підключаємося до сигналу завершення діалогу
 	if Engine.has_singleton("DialogueManager"):
@@ -77,3 +86,30 @@ func show_menu():
 func _on_dialogue_ended(_resource: DialogueResource):
 	# Показуємо меню після завершення діалогу
 	show_menu()
+
+func _on_phone_btn_pressed():
+	# Відкрити телефон
+	if phone_ui_instance:
+		# Якщо вже відкритий, закриваємо
+		phone_ui_instance.queue_free()
+		phone_ui_instance = null
+		return
+	
+	if not phone_ui_scene:
+		push_error("PhoneUI сцена не завантажена!")
+		return
+	
+	# Створюємо інстанс телефону
+	phone_ui_instance = phone_ui_scene.instantiate()
+	add_child(phone_ui_instance)
+	
+	# Підключаємо сигнал закриття (якщо є кнопка Close)
+	var close_btn = phone_ui_instance.get_node_or_null("PhonePanel/VBox/TopBar/CloseButton")
+	if close_btn:
+		close_btn.pressed.connect(_on_phone_closed)
+
+func _on_phone_closed():
+	# Закрити телефон
+	if phone_ui_instance:
+		phone_ui_instance.queue_free()
+		phone_ui_instance = null

@@ -66,3 +66,9 @@ custom_minimum_size = Vector2(300, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Джин Толік"
+
+[node name="PhoneBtn" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "📱 Телефон"
