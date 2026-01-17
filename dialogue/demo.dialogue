@@ -111,12 +111,13 @@ NPC: З ким хочеш поговорити? (Пройдено: {game_state.s
 
 ~ talk_alex
 
+do game_state.save_system.mark_character_talked("alex")
+
 Alex: Йо, братан! Як справи? Довго не бачились!
 
 if game_state.p_charm < 50
 	Alex: Слухай, ти сьогодні якийсь не такий... Нічого особистого, просто не наш формат.
 	Alex: Можливо іншим разом поспілкуємось нормально.
-	do game_state.save_system.mark_character_talked("alex")
 	=> hub
 else
 	Alex: О, а ти сьогодні в тонусі! Мені подобається твій настрій.
@@ -128,7 +129,6 @@ else
 		- Запропонувати піти на пиво разом
 		Alex: Блін, так! Я завжди за! Давай після цього бару заскочимо туди.
 		set game_state.agreed_alex = true
-		do game_state.save_system.mark_character_talked("alex")
 		Alex: Буде весело, обіцяю! Побачимось пізніше тут.
 		=> hub
 		- Можливо іншим разом
@@ -140,12 +140,13 @@ else
 
 ~ talk_bohdan
 
+do game_state.save_system.mark_character_talked("bohdan")
+
 Bohdan: Привіт. Що нового?
 
 if game_state.p_patience < 50
 	Bohdan: Слухай, ти сьогодні якийсь неспокійний. Мені важко з таким спілкуватись.
 	Bohdan: Давай іншим разом, коли ти будеш більш зібраний.
-	do game_state.save_system.mark_character_talked("bohdan")
 	=> hub
 else
 	Bohdan: Добре, що ти спокійний і зібраний. Можу з тобою нормально поговорити.
@@ -170,12 +171,13 @@ else
 
 ~ talk_dana
 
+do game_state.save_system.mark_character_talked("dana")
+
 Dana: О, привіт! Як справи, друже?
 
 if game_state.p_alcohol < 50
 	Dana: Слухай, ти сьогодні якийсь не в настрої для веселощів. Мені з таким не цікаво.
 	Dana: Може іншим разом, коли будеш більш розслаблений.
-	do game_state.save_system.mark_character_talked("dana")
 	=> hub
 else
 	Dana: О, я бачу, що ти знаєш, як розважатись! Мені це подобається.
@@ -200,12 +202,13 @@ else
 
 ~ talk_ira
 
+do game_state.save_system.mark_character_talked("ira")
+
 Ira: Привіт. Що потрібно?
 
 if game_state.p_straight > 50
 	Ira: Слухай, ти занадто прямий і грубий для мене. Мені з таким некомфортно.
 	Ira: Давай іншим разом, коли ти будеш більш тактовним.
-	do game_state.save_system.mark_character_talked("ira")
 	=> hub
 else
 	Ira: Добре, що ти не грубий і можеш нормально спілкуватись.

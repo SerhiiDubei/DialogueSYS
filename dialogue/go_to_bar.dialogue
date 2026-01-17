@@ -33,13 +33,11 @@ NPC: Загалом {game_state.get_agreed_count()} з 4 друзів погод
 
 if game_state.get_agreed_count() >= 3
 	NPC: Це чудовий результат! Вечірка буде класною!
-	=> go_to_bar_end
-
-if game_state.get_agreed_count() >= 2
+elif game_state.get_agreed_count() >= 2
 	NPC: Непоганий результат! Буде весело!
-	=> go_to_bar_end
+else
+	NPC: Ну що ж, хоч хтось погодився...
 
-NPC: Ну що ж, хоч хтось погодився...
 => go_to_bar_end
 
 ~ go_to_bar_end
