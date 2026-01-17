@@ -242,17 +242,8 @@ func _apply_button_styles() -> void:
 	if not responses_menu:
 		return
 	
-	# Визначаємо колір ободка залежно від поточного dialogue_line.id
-	# Перевіряємо, чи поточний діалог належить до main_menu
-	var is_main_menu: bool = false
-	if is_instance_valid(dialogue_line):
-		# Якщо id починається з "main_menu" або містить "main_menu", це головне меню
-		var line_id = dialogue_line.id
-		if line_id.begins_with("main_menu") or "main_menu" in line_id:
-			is_main_menu = true
-	# Якщо dialogue_line ще не готовий, використовуємо збережене значення
-	elif current_dialogue_title == "main_menu":
-		is_main_menu = true
+	# Визначаємо колір ободка залежно від типу діалогу
+	var is_main_menu: bool = (dialogue_type == DialogueType.MAIN_MENU)
 	var border_color: Color
 	var bg_color_normal: Color
 	var bg_color_hover: Color
