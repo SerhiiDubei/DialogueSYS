@@ -137,9 +137,15 @@ text = "❌
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -320.0
+offset_right = 180.0
+offset_bottom = 320.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -148,16 +154,20 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="ContactDetailScreen/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 15
+theme_override_constants/separation = 8
 
 [node name="TopBar" type="HBoxContainer" parent="ContactDetailScreen/ScrollContainer/VBox"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
 [node name="BackButton" type="Button" parent="ContactDetailScreen/ScrollContainer/VBox/TopBar"]
@@ -177,7 +187,7 @@ layout_mode = 2
 
 [node name="DetailPhoto" type="TextureRect" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 200)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 size_flags_horizontal = 4
 expand_mode = 1
@@ -186,20 +196,21 @@ stretch_mode = 5
 [node name="DetailName" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 text = "Ім'я контакту"
 horizontal_alignment = 1
 
 [node name="DetailPhone" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 14
 text = "+380 99 123 4567"
 horizontal_alignment = 1
 
 [node name="DetailDescription" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "Опис контакту"
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -209,22 +220,25 @@ layout_mode = 2
 
 [node name="StatsLabel" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "📊 Статистика"
 
 [node name="DetailCallCount" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "Дзвінків: 0"
 
 [node name="DetailLastCall" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "Останній дзвінок: немає"
 
 [node name="DetailStatus" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "Статус: доступний"
 
 [node name="HSeparator2" type="HSeparator" parent="ContactDetailScreen/ScrollContainer/VBox"]
@@ -232,26 +246,28 @@ layout_mode = 2
 
 [node name="ButtonsLabel" type="Label" parent="ContactDetailScreen/ScrollContainer/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "⚙️ Дії"
 
 [node name="CallContactButton" type="Button" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 14
 text = "📞 Зателефонувати"
 
 [node name="FavoriteButton" type="Button" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "⭐ Додати в обране"
 
 [node name="BlockButton" type="Button" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 text = "🚫 Заблокувати"
 
 [connection signal="pressed" from="PhonePanel/VBox/TopBar/CloseButton" to="." method="close_phone"]
