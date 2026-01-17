@@ -34,6 +34,9 @@ var locals: Dictionary = {}
 
 var _locale: String = TranslationServer.get_locale()
 
+## Поточний title діалогу (для визначення стилю)
+var current_dialogue_title: String = ""
+
 ## The current line
 var dialogue_line: DialogueLine:
 	set(value):
@@ -80,7 +83,8 @@ func _ready() -> void:
 	add_child(mutation_cooldown)
 	
 	# Налаштування кольорів контейнерів (викликаємо після того, як всі елементи готові)
-	call_deferred("_setup_colors")
+	# За замовчуванням використовуємо червоний стиль
+	call_deferred("_setup_colors", "default")
 
 	if auto_start:
 		if not is_instance_valid(dialogue_resource):
@@ -89,22 +93,38 @@ func _ready() -> void:
 
 
 ## Налаштування кольорів UI контейнерів
-func _setup_colors() -> void:
-	var red_border = Color(1, 0, 0, 1)  # Червоний колір для всіх ободків
+## title: назва діалогу ("main_menu" для головного меню, інше - для звичайних діалогів)
+func _setup_colors(title: String = "default") -> void:
+	# Визначаємо колір ободка залежно від title
+	var border_color: Color
+	var bg_color: Color
+	var is_main_menu: bool = (title == "main_menu")
 	
-	print("Налаштування кольорів...")  # Debug
+	if is_main_menu:
+		# СИНІЙ стиль для головного меню
+		border_color = Color(0.2, 0.5, 1.0, 1.0)  # Яскраво-синій
+		bg_color = Color(0.1, 0.15, 0.25, 1.0)  # Темно-синій фон
+		print("Налаштування кольорів для ГОЛОВНОГО МЕНЮ (синій стиль)...")  # Debug
+	else:
+		# ЧЕРВОНИЙ стиль для звичайних діалогів
+		border_color = Color(1, 0, 0, 1)  # Червоний
+		bg_color = Color(0.2, 0.2, 0.3, 1.0)  # Темний фон
+		print("Налаштування кольорів для звичайного діалогу (червоний стиль)...")  # Debug
 	
 	# Змінити колір тексту імені персонажа
 	if character_label:
-		character_label.modulate = Color(1, 1, 1, 0.8)  # Білий з прозорістю
+		if is_main_menu:
+			character_label.modulate = Color(0.7, 0.9, 1.0, 1.0)  # Світло-синій для меню
+		else:
+			character_label.modulate = Color(1, 1, 1, 0.8)  # Білий з прозорістю
 	
-	# Змінити колір фону PanelContainer з червоними ободками
+	# Змінити колір фону PanelContainer
 	var panel_container = balloon.get_node_or_null("MarginContainer/PanelContainer")
 	if panel_container and panel_container is PanelContainer:
 		print("Знайдено PanelContainer, змінюю колір...")  # Debug
 		var style_box = StyleBoxFlat.new()
-		style_box.bg_color = Color(0.1, 0.1, 0.15, 0.95)  # Темно-синій фон
-		style_box.border_color = red_border  # ЧЕРВОНА РАМКА
+		style_box.bg_color = bg_color  # Фон залежно від типу діалогу
+		style_box.border_color = border_color  # Колір рамки залежно від типу діалогу
 		style_box.border_width_left = 3
 		style_box.border_width_top = 3
 		style_box.border_width_right = 3
@@ -116,12 +136,30 @@ func _setup_colors() -> void:
 		panel_container.add_theme_stylebox_override("panel", style_box)
 	
 	# Змінити колір індикатора Progress
-	progress.color = Color(1, 1, 1, 0.8)  # Білий індикатор
+	if progress:
+		if is_main_menu:
+			progress.color = Color(0.7, 0.9, 1.0, 0.8)  # Світло-синій для меню
+		else:
+			progress.color = Color(1, 1, 1, 0.8)  # Білий індикатор
 	
-	# Змінити кольори кнопок відповідей з червоними ободками
+	# Визначаємо кольори для кнопок
+	var bg_color_normal: Color
+	var bg_color_hover: Color
+	var bg_color_disabled: Color
+	
+	if is_main_menu:
+		bg_color_normal = Color(0.15, 0.25, 0.4, 1)  # Темно-синій для меню
+		bg_color_hover = Color(0.25, 0.35, 0.5, 1)  # Світліший синій для меню
+		bg_color_disabled = Color(0.08, 0.12, 0.2, 1)  # Дуже темний синій для меню
+	else:
+		bg_color_normal = Color(0.2, 0.2, 0.3, 1)  # Темний фон кнопки
+		bg_color_hover = Color(0.3, 0.3, 0.4, 1)  # Світліший при наведенні
+		bg_color_disabled = Color(0.1, 0.1, 0.15, 1)  # Дуже темний
+	
+	# Змінити кольори кнопок відповідей
 	var button_style_normal = StyleBoxFlat.new()
-	button_style_normal.bg_color = Color(0.2, 0.2, 0.3, 1)  # Темний фон кнопки
-	button_style_normal.border_color = red_border  # ЧЕРВОНА РАМКА
+	button_style_normal.bg_color = bg_color_normal
+	button_style_normal.border_color = border_color
 	button_style_normal.border_width_left = 2
 	button_style_normal.border_width_top = 2
 	button_style_normal.border_width_right = 2
@@ -132,8 +170,8 @@ func _setup_colors() -> void:
 	button_style_normal.corner_radius_bottom_left = 5
 	
 	var button_style_hover = StyleBoxFlat.new()
-	button_style_hover.bg_color = Color(0.3, 0.3, 0.4, 1)  # Світліший при наведенні
-	button_style_hover.border_color = red_border  # ЧЕРВОНА РАМКА
+	button_style_hover.bg_color = bg_color_hover
+	button_style_hover.border_color = border_color
 	button_style_hover.border_width_left = 2
 	button_style_hover.border_width_top = 2
 	button_style_hover.border_width_right = 2
@@ -144,8 +182,8 @@ func _setup_colors() -> void:
 	button_style_hover.corner_radius_bottom_left = 5
 	
 	var button_style_focus = StyleBoxFlat.new()
-	button_style_focus.bg_color = Color(0.3, 0.3, 0.4, 1)
-	button_style_focus.border_color = red_border  # ЧЕРВОНА РАМКА
+	button_style_focus.bg_color = bg_color_hover  # Такий самий як hover
+	button_style_focus.border_color = border_color
 	button_style_focus.border_width_left = 2
 	button_style_focus.border_width_top = 2
 	button_style_focus.border_width_right = 2
@@ -156,8 +194,8 @@ func _setup_colors() -> void:
 	button_style_focus.corner_radius_bottom_left = 5
 	
 	var button_style_disabled = StyleBoxFlat.new()
-	button_style_disabled.bg_color = Color(0.1, 0.1, 0.15, 1)
-	button_style_disabled.border_color = red_border  # ЧЕРВОНА РАМКА
+	button_style_disabled.bg_color = bg_color_disabled
+	button_style_disabled.border_color = border_color
 	button_style_disabled.border_width_left = 2
 	button_style_disabled.border_width_top = 2
 	button_style_disabled.border_width_right = 2
@@ -181,7 +219,10 @@ func _setup_colors() -> void:
 	balloon.add_theme_stylebox_override("focus", button_style_focus)
 	balloon.add_theme_stylebox_override("disabled", button_style_disabled)
 	
-	print("Кольори налаштовано! Червоний ободок встановлено.")  # Debug
+	if is_main_menu:
+		print("Кольори налаштовано! СИНІЙ стиль для головного меню встановлено.")  # Debug
+	else:
+		print("Кольори налаштовано! ЧЕРВОНИЙ стиль для діалогу встановлено.")  # Debug
 
 
 ## Застосовує стилі до всіх кнопок відповідей
@@ -189,12 +230,30 @@ func _apply_button_styles() -> void:
 	if not responses_menu:
 		return
 	
-	var red_border = Color(1, 0, 0, 1)  # Червоний колір для всіх ободків
+	# Визначаємо колір ободка залежно від поточного title
+	var is_main_menu: bool = (current_dialogue_title == "main_menu")
+	var border_color: Color
+	var bg_color_normal: Color
+	var bg_color_hover: Color
+	var bg_color_disabled: Color
+	
+	if is_main_menu:
+		# СИНІЙ стиль для головного меню
+		border_color = Color(0.2, 0.5, 1.0, 1.0)  # Яскраво-синій
+		bg_color_normal = Color(0.15, 0.25, 0.4, 1)
+		bg_color_hover = Color(0.25, 0.35, 0.5, 1)
+		bg_color_disabled = Color(0.08, 0.12, 0.2, 1)
+	else:
+		# ЧЕРВОНИЙ стиль для звичайних діалогів
+		border_color = Color(1, 0, 0, 1)  # Червоний
+		bg_color_normal = Color(0.2, 0.2, 0.3, 1)
+		bg_color_hover = Color(0.3, 0.3, 0.4, 1)
+		bg_color_disabled = Color(0.1, 0.1, 0.15, 1)
 	
 	# Створюємо стилі для кнопок
 	var button_style_normal = StyleBoxFlat.new()
-	button_style_normal.bg_color = Color(0.2, 0.2, 0.3, 1)
-	button_style_normal.border_color = red_border
+	button_style_normal.bg_color = bg_color_normal
+	button_style_normal.border_color = border_color
 	button_style_normal.border_width_left = 2
 	button_style_normal.border_width_top = 2
 	button_style_normal.border_width_right = 2
@@ -205,8 +264,8 @@ func _apply_button_styles() -> void:
 	button_style_normal.corner_radius_bottom_left = 5
 	
 	var button_style_hover = StyleBoxFlat.new()
-	button_style_hover.bg_color = Color(0.3, 0.3, 0.4, 1)
-	button_style_hover.border_color = red_border
+	button_style_hover.bg_color = bg_color_hover
+	button_style_hover.border_color = border_color
 	button_style_hover.border_width_left = 2
 	button_style_hover.border_width_top = 2
 	button_style_hover.border_width_right = 2
@@ -217,8 +276,8 @@ func _apply_button_styles() -> void:
 	button_style_hover.corner_radius_bottom_left = 5
 	
 	var button_style_focus = StyleBoxFlat.new()
-	button_style_focus.bg_color = Color(0.3, 0.3, 0.4, 1)
-	button_style_focus.border_color = red_border
+	button_style_focus.bg_color = bg_color_hover  # Такий самий як hover
+	button_style_focus.border_color = border_color
 	button_style_focus.border_width_left = 2
 	button_style_focus.border_width_top = 2
 	button_style_focus.border_width_right = 2
@@ -229,8 +288,8 @@ func _apply_button_styles() -> void:
 	button_style_focus.corner_radius_bottom_left = 5
 	
 	var button_style_disabled = StyleBoxFlat.new()
-	button_style_disabled.bg_color = Color(0.1, 0.1, 0.15, 1)
-	button_style_disabled.border_color = red_border
+	button_style_disabled.bg_color = bg_color_disabled
+	button_style_disabled.border_color = border_color
 	button_style_disabled.border_width_left = 2
 	button_style_disabled.border_width_top = 2
 	button_style_disabled.border_width_right = 2
@@ -280,6 +339,9 @@ func start(with_dialogue_resource: DialogueResource = null, title: String = "", 
 		dialogue_resource = with_dialogue_resource
 	if not title.is_empty():
 		start_from_title = title
+		current_dialogue_title = title  # Зберігаємо поточний title для визначення стилю
+		# Оновлюємо стиль залежно від title
+		call_deferred("_setup_colors", title)
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(start_from_title, temporary_game_states)
 	show()
 
