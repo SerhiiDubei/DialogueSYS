@@ -79,11 +79,11 @@ PhoneSystemManager.can_call("alex")  # true/false
 #### 📞 Дзвінки
 
 ```gdscript
-call(contact_id: String)
+make_call(contact_id: String)
 # ЗАТЕЛЕФОНУВАТИ
 # Викликає сигнал call_started
 
-PhoneSystemManager.call("mom")
+PhoneSystemManager.make_call("mom")
 
 end_call(success: bool = true)
 # ЗАВЕРШИТИ ДЗВІНОК
@@ -297,7 +297,7 @@ NPC: Ось мій номер. Телефонуй!
 do PhoneSystemManager.register_contact(load("res://contacts/npc.tres"))
 
 # Зателефонувати (якщо треба відразу)
-do PhoneSystemManager.call("npc")
+do PhoneSystemManager.make_call("npc")
 
 # Перевірити чи можна дзвонити
 NPC: Можеш дзвонити! [if PhoneSystemManager.can_call("npc")]
@@ -440,7 +440,7 @@ func _on_quest_done():
 ```gdscript
 # cutscene.gd
 func _play_phone_cutscene():
-	PhoneSystemManager.call("detective")
+	PhoneSystemManager.make_call("detective")
 	await PhoneSystemManager.call_ended
 	print("Дзвінок завершено!")
 ```

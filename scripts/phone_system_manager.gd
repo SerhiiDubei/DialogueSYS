@@ -34,7 +34,7 @@ func _ready():
 ## ==========================================
 
 func _load_contacts_from_folder():
-	"""Завантажити всі контакти з папки contacts/"""
+	# Завантажити всі контакти з папки contacts/
 	var dir = DirAccess.open(CONTACTS_FOLDER)
 	if !dir:
 		push_warning("⚠️ Папка contacts/ не знайдена")
@@ -58,7 +58,7 @@ func _load_contacts_from_folder():
 	contacts_loaded.emit()
 
 func register_contact(contact: ContactResource):
-	"""Додати контакт в телефонну книгу"""
+	# Додати контакт в телефонну книгу
 	if contact.id.is_empty():
 		push_error("❌ Контакт має мати ID!")
 		return
@@ -71,7 +71,7 @@ func register_contact(contact: ContactResource):
 ## ==========================================
 
 func can_call(contact_id: String) -> bool:
-	"""ЧИ МОЖНА ЗАТЕЛЕФОНУВАТИ?"""
+	# ЧИ МОЖНА ЗАТЕЛЕФОНУВАТИ?
 	if !contacts.has(contact_id):
 		return false
 	
@@ -91,8 +91,8 @@ func can_call(contact_id: String) -> bool:
 	
 	return true
 
-func call(contact_id: String):
-	"""ЗАТЕЛЕФОНУВАТИ"""
+func make_call(contact_id: String):
+	# ЗАТЕЛЕФОНУВАТИ
 	if !can_call(contact_id):
 		push_warning("⚠️ Не можна зателефонувати: " + contact_id)
 		return
@@ -114,7 +114,7 @@ func call(contact_id: String):
 	call_started.emit(contact_id, contact)
 
 func end_call(success: bool = true):
-	"""ЗАВЕРШИТИ ДЗВІНОК"""
+	# ЗАВЕРШИТИ ДЗВІНОК
 	if current_call_id.is_empty():
 		return
 	
@@ -139,7 +139,7 @@ func end_call(success: bool = true):
 ## ==========================================
 
 func search_contacts(query: String) -> Array[ContactResource]:
-	"""Пошук контактів"""
+	# Пошук контактів
 	if query.is_empty():
 		return get_all_contacts()
 	
@@ -155,7 +155,7 @@ func search_contacts(query: String) -> Array[ContactResource]:
 	return results
 
 func get_all_contacts() -> Array[ContactResource]:
-	"""Всі контакти (відсортовані за ім'ям)"""
+	# Всі контакти (відсортовані за ім'ям)
 	var result: Array[ContactResource] = []
 	for contact in contacts.values():
 		result.append(contact)
@@ -164,7 +164,7 @@ func get_all_contacts() -> Array[ContactResource]:
 	return result
 
 func get_favorites() -> Array[ContactResource]:
-	"""Тільки обрані"""
+	# Тільки обрані
 	var result: Array[ContactResource] = []
 	for contact in contacts.values():
 		if contact.favorite:
@@ -174,7 +174,7 @@ func get_favorites() -> Array[ContactResource]:
 	return result
 
 func get_recent_contacts() -> Array[Dictionary]:
-	"""Останні дзвінки"""
+	# Останні дзвінки
 	return recent_calls.duplicate()
 
 ## ==========================================
@@ -182,34 +182,34 @@ func get_recent_contacts() -> Array[Dictionary]:
 ## ==========================================
 
 func get_contact(contact_id: String) -> ContactResource:
-	"""Отримати контакт"""
+	# Отримати контакт
 	return contacts.get(contact_id)
 
 func add_to_favorites(contact_id: String):
-	"""Додати в обране"""
+	# Додати в обране
 	if contacts.has(contact_id):
 		contacts[contact_id].favorite = true
 		_save_contacts_data()
 
 func remove_from_favorites(contact_id: String):
-	"""Видалити з обраного"""
+	# Видалити з обраного
 	if contacts.has(contact_id):
 		contacts[contact_id].favorite = false
 		_save_contacts_data()
 
 func block_contact(contact_id: String):
-	"""Заблокувати"""
+	# Заблокувати
 	if !contact_id in blocked:
 		blocked.append(contact_id)
 		_save_contacts_data()
 
 func unblock_contact(contact_id: String):
-	"""Розблокувати"""
+	# Розблокувати
 	blocked.erase(contact_id)
 	_save_contacts_data()
 
 func get_contact_info(contact_id: String) -> Dictionary:
-	"""Інфо про контакт"""
+	# Інфо про контакт
 	if !contacts.has(contact_id):
 		return {}
 	
@@ -231,7 +231,7 @@ func get_contact_info(contact_id: String) -> Dictionary:
 ## ==========================================
 
 func _check_conditions(contact: ContactResource) -> bool:
-	"""Перевірка умов доступності"""
+	# Перевірка умов доступності
 	# Прапорець
 	if !contact.condition_flag.is_empty():
 		# TODO: Інтеграція з системою прапорців
@@ -260,7 +260,7 @@ func _check_conditions(contact: ContactResource) -> bool:
 ## ==========================================
 
 func _add_to_recent(call_data: Dictionary):
-	"""Додати дзвінок в історію"""
+	# Додати дзвінок в історію
 	recent_calls.insert(0, call_data)
 	
 	# Обмеження розміру історії
@@ -270,7 +270,7 @@ func _add_to_recent(call_data: Dictionary):
 	_save_call_history()
 
 func clear_recent():
-	"""Очистити історію"""
+	# Очистити історію
 	recent_calls.clear()
 	_save_call_history()
 
@@ -279,7 +279,7 @@ func clear_recent():
 ## ==========================================
 
 func _save_contacts_data():
-	"""Зберегти дані контактів (обране, блоковані)"""
+	# Зберегти дані контактів (обране, блоковані)
 	var data = {
 		"favorites": [],
 		"blocked": blocked,
@@ -302,7 +302,7 @@ func _save_contacts_data():
 		file.close()
 
 func _load_contacts_data():
-	"""Завантажити дані контактів"""
+	# Завантажити дані контактів
 	if !FileAccess.file_exists("user://phone_contacts.json"):
 		return
 	
@@ -336,14 +336,14 @@ func _load_contacts_data():
 			contact.dialogue_completed = stat.get("dialogue_completed", false)
 
 func _save_call_history():
-	"""Зберегти історію дзвінків"""
+	# Зберегти історію дзвінків
 	var file = FileAccess.open("user://phone_history.json", FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(recent_calls))
 		file.close()
 
 func _load_call_history():
-	"""Завантажити історію дзвінків"""
+	# Завантажити історію дзвінків
 	if !FileAccess.file_exists("user://phone_history.json"):
 		return
 	

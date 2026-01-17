@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cafnlch5ol4cy"]
 
-[ext_resource type="Script" path="res://scenes/dialogue_map.gd" id="1_dialogue_map"]
+[ext_resource type="Script" uid="uid://rq7yy7nmikpm" path="res://scenes/dialogue_map.gd" id="1_dialogue_map"]
 
 [node name="DialogueMap" type="Control"]
 layout_mode = 3

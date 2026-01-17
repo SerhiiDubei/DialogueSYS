@@ -49,7 +49,7 @@ func _ready():
 ## ==========================================
 
 func _refresh_list():
-	"""Оновити список контактів"""
+	# Оновити список контактів
 	# Очистити список
 	for child in contact_list.get_children():
 		child.queue_free()
@@ -80,7 +80,7 @@ func _refresh_list():
 		contact_list.add_child(label)
 
 func _add_contact_entry(contact: ContactResource):
-	"""Додати елемент контакту"""
+	# Додати елемент контакту
 	var entry = contact_entry_scene.instantiate()
 	contact_list.add_child(entry)
 	
@@ -89,7 +89,7 @@ func _add_contact_entry(contact: ContactResource):
 	entry.call_pressed.connect(func(): _on_contact_call_pressed(contact.id))
 
 func _show_recent_calls():
-	"""Показати недавні дзвінки"""
+	# Показати недавні дзвінки
 	var recent = PhoneSystemManager.get_recent_contacts()
 	
 	if recent.is_empty():
@@ -116,15 +116,15 @@ func _show_recent_calls():
 ## ==========================================
 
 func _on_contact_call_pressed(contact_id: String):
-	"""Натиснуто кнопку дзвінка"""
+	# Натиснуто кнопку дзвінка
 	if !PhoneSystemManager.can_call(contact_id):
 		_show_error("Неможливо зателефонувати")
 		return
 	
-	PhoneSystemManager.call(contact_id)
+	PhoneSystemManager.make_call(contact_id)
 
 func _on_call_started(contact_id: String, contact: ContactResource):
-	"""Дзвінок почався"""
+	# Дзвінок почався
 	current_contact = contact
 	
 	# Показати екран дзвінка
@@ -150,14 +150,14 @@ func _on_call_started(contact_id: String, contact: ContactResource):
 			_handle_multi_scene_dialogue()
 
 func _on_call_ended(contact_id: String, success: bool):
-	"""Дзвінок завершено"""
+	# Дзвінок завершено
 	call_timer_active = false
 	await get_tree().create_timer(0.5).timeout
 	call_screen.visible = false
 	current_contact = null
 
 func _on_hangup_pressed():
-	"""Покласти слухавку"""
+	# Покласти слухавку
 	PhoneSystemManager.end_call(false)
 
 ## ==========================================
@@ -165,21 +165,21 @@ func _on_hangup_pressed():
 ## ==========================================
 
 func _handle_no_answer():
-	"""Не відповідає"""
+	# Не відповідає
 	await get_tree().create_timer(3.0).timeout
 	call_status.text = "Абонент не відповідає"
 	await get_tree().create_timer(2.0).timeout
 	PhoneSystemManager.end_call(false)
 
 func _handle_wrong_number():
-	"""Старий номер"""
+	# Старий номер
 	await get_tree().create_timer(2.0).timeout
 	call_status.text = "Номер не обслуговується"
 	await get_tree().create_timer(2.0).timeout
 	PhoneSystemManager.end_call(false)
 
 func _handle_quick_chat():
-	"""Швидкий чат"""
+	# Швидкий чат
 	call_status.text = "З'єднано"
 	_start_call_timer()
 	
@@ -198,7 +198,7 @@ func _handle_quick_chat():
 	PhoneSystemManager.end_call(true)
 
 func _handle_short_dialogue():
-	"""Короткий діалог"""
+	# Короткий діалог
 	call_status.text = "З'єднано"
 	_start_call_timer()
 	
@@ -218,11 +218,11 @@ func _handle_short_dialogue():
 	PhoneSystemManager.end_call(true)
 
 func _handle_full_dialogue():
-	"""Повний діалог"""
+	# Повний діалог
 	_handle_short_dialogue()  # Та сама логіка
 
 func _handle_multi_scene_dialogue():
-	"""Багатосценний діалог"""
+	# Багатосценний діалог
 	call_status.text = "З'єднано"
 	_start_call_timer()
 	
@@ -265,12 +265,12 @@ func _handle_multi_scene_dialogue():
 ## ==========================================
 
 func _start_call_timer():
-	"""Запустити таймер дзвінка"""
+	# Запустити таймер дзвінка
 	call_timer_active = true
 	_update_call_timer()
 
 func _update_call_timer():
-	"""Оновити таймер"""
+	# Оновити таймер
 	var elapsed = 0
 	while call_timer_active:
 		var minutes = elapsed / 60
@@ -284,16 +284,16 @@ func _update_call_timer():
 ## ==========================================
 
 func _on_search_changed(new_text: String):
-	"""Пошук змінився"""
+	# Пошук змінився
 	_refresh_list()
 
 func _on_tab_changed(tab: int):
-	"""Вкладка змінилась"""
+	# Вкладка змінилась
 	current_tab = tab as Tab
 	_refresh_list()
 
 func _show_error(message: String):
-	"""Показати помилку"""
+	# Показати помилку
 	# TODO: Додати UI для помилок
 	print("❌ ", message)
 
@@ -302,11 +302,11 @@ func _show_error(message: String):
 ## ==========================================
 
 func open_phone():
-	"""Відкрити телефон"""
+	# Відкрити телефон
 	visible = true
 
 func close_phone():
-	"""Закрити телефон"""
+	# Закрити телефон
 	visible = false
 	# Якщо йде дзвінок - завершити
 	if !PhoneSystemManager.current_call_id.is_empty():
