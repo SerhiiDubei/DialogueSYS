@@ -17,6 +17,15 @@ func _ready():
 	game_state.name = "game_state"
 	add_child(game_state)
 	
+	# ВАЖЛИВО: Чекаємо поки _ready() викличеться для game_state
+	await get_tree().process_frame
+	
+	# Перевіряємо чи save_system ініціалізувався
+	if game_state.save_system == null:
+		push_error("SaveSystem не ініціалізувався!")
+	else:
+		print("✅ SaveSystem готовий!")
+	
 	# Завантажуємо діалоговий ресурс
 	dialogue_resource = load("res://dialogue/demo.dialogue")
 	
