@@ -318,7 +318,8 @@ func _apply_button_styles() -> void:
 			child.add_theme_stylebox_override("hover", button_style_hover)
 			child.add_theme_stylebox_override("focus", button_style_focus)
 			child.add_theme_stylebox_override("disabled", button_style_disabled)
-			print("Застосовано червоний ободок до кнопки: ", child.name)  # Debug
+			var color_name = "СИНІЙ" if is_main_menu else "ЧЕРВОНИЙ"
+			print("Застосовано %s ободок до кнопки: %s" % [color_name, child.name])  # Debug
 	
 	print("Стилі кнопок застосовано!")  # Debug
 
