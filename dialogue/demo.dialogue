@@ -85,52 +85,32 @@ NPC: Використано: [[game_state.p_completed_count]]/2
 
 ~ hub_options
 
-# Алекс - доступний якщо не говорили АБО є спроби
+# Алекс
 - Поговорити з Алексом [if !game_state.save_system.has_talked_to("alex") && game_state.save_system.can_talk_to_new_character()]
 	=> talk_alex
-# Алекс - вже говорили
 - ✅ Алекс (вже говорили) [if game_state.save_system.has_talked_to("alex")]
 	NPC: Ти вже говорив з Алексом. Він тебе запам'ятав!
 	=> hub_options
-# Алекс - ліміт вичерпано
-- 🚫 Алекс (ліміт вичерпано) [if !game_state.save_system.has_talked_to("alex") && !game_state.save_system.can_talk_to_new_character()]
-	NPC: Ти витратив усі спроби. Алекс недоступний.
-	=> hub_options
 
-# Богдан - доступний якщо не говорили АБО є спроби
+# Богдан
 - Поговорити з Богданом [if !game_state.save_system.has_talked_to("bohdan") && game_state.save_system.can_talk_to_new_character()]
 	=> talk_bohdan
-# Богдан - вже говорили
 - ✅ Богдан (вже говорили) [if game_state.save_system.has_talked_to("bohdan")]
 	NPC: Ти вже говорив з Богданом. Він про тебе все знає!
 	=> hub_options
-# Богдан - ліміт вичерпано
-- 🚫 Богдан (ліміт вичерпано) [if !game_state.save_system.has_talked_to("bohdan") && !game_state.save_system.can_talk_to_new_character()]
-	NPC: Ти витратив усі спроби. Богдан недоступний.
-	=> hub_options
 
-# Дана - доступна якщо не говорили АБО є спроби
+# Дана
 - Поговорити з Даною [if !game_state.save_system.has_talked_to("dana") && game_state.save_system.can_talk_to_new_character()]
 	=> talk_dana
-# Дана - вже говорили
 - ✅ Дана (вже говорили) [if game_state.save_system.has_talked_to("dana")]
 	NPC: Ти вже говорив з Даною. Вона тебе пам'ятає!
 	=> hub_options
-# Дана - ліміт вичерпано
-- 🚫 Дана (ліміт вичерпано) [if !game_state.save_system.has_talked_to("dana") && !game_state.save_system.can_talk_to_new_character()]
-	NPC: Ти витратив усі спроби. Дана недоступна.
-	=> hub_options
 
-# Іра - доступна якщо не говорили АБО є спроби
+# Іра
 - Поговорити з Ірою [if !game_state.save_system.has_talked_to("ira") && game_state.save_system.can_talk_to_new_character()]
 	=> talk_ira
-# Іра - вже говорили
 - ✅ Іра (вже говорили) [if game_state.save_system.has_talked_to("ira")]
 	NPC: Ти вже говорив з Ірою. Вона про тебе не забула!
-	=> hub_options
-# Іра - ліміт вичерпано
-- 🚫 Іра (ліміт вичерпано) [if !game_state.save_system.has_talked_to("ira") && !game_state.save_system.can_talk_to_new_character()]
-	NPC: Ти витратив усі спроби. Іра недоступна.
 	=> hub_options
 
 # Кнопка бару - активується коли використано 2 спроби
