@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://csh15avmp5qw6"]
+
+[ext_resource type="Script" path="res://scripts/bar_scene_2d.gd" id="1_bar_scene"]
+
+[node name="BarScene2D" type="CanvasLayer"]
+script = ExtResource("1_bar_scene")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="World"]
+
+[node name="Background" type="ColorRect" parent="World"]
+offset_left = -640.0
+offset_top = -360.0
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0.15, 0.1, 0.05, 1)
+
+[node name="BarCounter" type="ColorRect" parent="World"]
+offset_left = -400.0
+offset_top = 100.0
+offset_right = 400.0
+offset_bottom = 150.0
+color = Color(0.4, 0.3, 0.2, 1)
+
+[node name="Characters" type="Node2D" parent="World"]
+
+[node name="Alex" type="Node2D" parent="World/Characters"]
+position = Vector2(-200, 50)
+
+[node name="Sprite" type="ColorRect" parent="World/Characters/Alex"]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.8, 0.6, 0.4, 1)
+
+[node name="NameLabel" type="Label" parent="World/Characters/Alex"]
+offset_left = -50.0
+offset_top = 40.0
+offset_right = 50.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Алекс"
+horizontal_alignment = 1
+
+[node name="Bohdan" type="Node2D" parent="World/Characters"]
+position = Vector2(-50, 50)
+
+[node name="Sprite" type="ColorRect" parent="World/Characters/Bohdan"]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.6, 0.7, 0.9, 1)
+
+[node name="NameLabel" type="Label" parent="World/Characters/Bohdan"]
+offset_left = -50.0
+offset_top = 40.0
+offset_right = 50.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Богдан"
+horizontal_alignment = 1
+
+[node name="Dana" type="Node2D" parent="World/Characters"]
+position = Vector2(100, 50)
+
+[node name="Sprite" type="ColorRect" parent="World/Characters/Dana"]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(1, 0.7, 0.8, 1)
+
+[node name="NameLabel" type="Label" parent="World/Characters/Dana"]
+offset_left = -50.0
+offset_top = 40.0
+offset_right = 50.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Дана"
+horizontal_alignment = 1
+
+[node name="Ira" type="Node2D" parent="World/Characters"]
+position = Vector2(200, 50)
+
+[node name="Sprite" type="ColorRect" parent="World/Characters/Ira"]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.8, 1, 0.7, 1)
+
+[node name="NameLabel" type="Label" parent="World/Characters/Ira"]
+offset_left = -50.0
+offset_top = 40.0
+offset_right = 50.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Іра"
+horizontal_alignment = 1
