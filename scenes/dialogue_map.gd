@@ -45,24 +45,54 @@ func _ready():
 	worldmap_view.node_mouse_entered.connect(_on_node_hovered)
 	worldmap_view.node_mouse_exited.connect(_on_node_exited)
 
+func create_node_texture(color: Color, size: int = 64) -> ImageTexture:
+	# Створюємо просту текстуру - коло заданого кольору
+	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	image.fill(Color.TRANSPARENT)
+	
+	var center = Vector2(size / 2.0, size / 2.0)
+	var radius = size / 2.0 - 4
+	
+	# Малюємо коло
+	for x in range(size):
+		for y in range(size):
+			var pos = Vector2(x, y)
+			var dist = pos.distance_to(center)
+			if dist <= radius:
+				image.set_pixel(x, y, color)
+			elif dist <= radius + 2:
+				# Ободок
+				image.set_pixel(x, y, color.darkened(0.3))
+	
+	var texture = ImageTexture.create_from_image(image)
+	return texture
+
 func setup_dialogue_map():
 	# Створюємо вузли для кожного діалогу
 	# Лінійна структура: main_menu -> перша_проба -> джин_толік
+	
+	# Створюємо текстури для вузлів
+	var texture_0 = create_node_texture(Color(0.2, 0.5, 1.0, 1.0), 80)  # Синій для головного меню
+	var texture_1 = create_node_texture(Color(1.0, 0.3, 0.3, 1.0), 80)  # Червоний для першої проби
+	var texture_2 = create_node_texture(Color(0.3, 1.0, 0.3, 1.0), 80)  # Зелений для джин толік
 	
 	# Створюємо WorldmapNodeData для кожного вузла
 	var node_data_0 = WorldmapNodeData.new()
 	node_data_0.name = "Головне меню"
 	node_data_0.id = "main_menu"
+	node_data_0.texture = texture_0
 	node_data_0.cost = 1.0
 	
 	var node_data_1 = WorldmapNodeData.new()
 	node_data_1.name = "Перша проба"
 	node_data_1.id = "перша_проба"
+	node_data_1.texture = texture_1
 	node_data_1.cost = 1.0
 	
 	var node_data_2 = WorldmapNodeData.new()
 	node_data_2.name = "Джин Толік"
 	node_data_2.id = "джин_толік"
+	node_data_2.texture = texture_2
 	node_data_2.cost = 1.0
 	
 	# Встановлюємо кількість вузлів
