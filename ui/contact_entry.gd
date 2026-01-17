@@ -4,10 +4,30 @@ extends HBoxContainer
 signal call_pressed()
 
 var contact_id: String = ""
+var _contact_data: ContactResource = null
+var _call_data: Dictionary = {}
 
 func setup(contact: ContactResource, call_data: Dictionary = {}):
-	# Налаштувати елемент
+	# Зберігаємо дані і викликаємо _apply_setup в наступному кадрі
+	_contact_data = contact
+	_call_data = call_data
 	contact_id = contact.id
+	
+	# Якщо вже в дереві - застосувати зараз, інакше чекати _ready
+	if is_inside_tree():
+		call_deferred("_apply_setup")
+
+func _ready():
+	# Якщо дані є - застосувати
+	if _contact_data:
+		_apply_setup()
+
+func _apply_setup():
+	if !_contact_data:
+		return
+	
+	var contact = _contact_data
+	var call_data = _call_data
 	
 	# Отримуємо посилання на ноди
 	var photo: TextureRect = get_node_or_null("Photo")
@@ -37,10 +57,10 @@ func setup(contact: ContactResource, call_data: Dictionary = {}):
 	
 	# Кнопка дзвінка
 	if call_button:
-		call_button.pressed.connect(_on_call_pressed)
+		# Перевірити чи вже підключено
+		if !call_button.pressed.is_connected(_on_call_pressed):
+			call_button.pressed.connect(_on_call_pressed)
 		call_button.disabled = !PhoneSystemManager.can_make_call(contact_id)
-	else:
-		push_error("CallButton не знайдено в contact_entry!")
 
 func _on_call_pressed():
 	call_pressed.emit()
