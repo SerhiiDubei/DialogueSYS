@@ -83,7 +83,8 @@ func send_chat_request(http_request: HTTPRequest, message_list: Array) -> bool:
 	
 	# Ensure model does not have "models/" prefix
 	if model.begins_with("models/"):
-		model = model.substr("models/".length())
+		var prefix_length = "models/".length()
+		model = model.substr(prefix_length)
 
 	# Gemini expects each message with role and a parts array of {text: ...}
 	var formatted_contents := []
