@@ -2,6 +2,7 @@ extends Control
 ## UI Телефону (як iPhone)
 
 ## Вузли (будуть прив'язані в сцені)
+@onready var phone_panel: Panel = $PhonePanel
 @onready var search_bar: LineEdit = %SearchBar
 @onready var tab_bar: TabBar = %TabBar
 @onready var contact_list: VBoxContainer = %ContactList
@@ -391,12 +392,14 @@ func _show_contact_details(contact_id: String):
 	else:
 		detail_block_button.text = "🚫 Заблокувати"
 	
-	# Показати екран
+	# Ховати PhonePanel, показати екран деталей
+	phone_panel.visible = false
 	detail_screen.visible = true
 
 func _on_detail_back_pressed():
-	# Закрити екран деталей
+	# Закрити екран деталей, показати PhonePanel
 	detail_screen.visible = false
+	phone_panel.visible = true
 	current_detail_contact_id = ""
 
 func _on_detail_call_pressed():
@@ -405,6 +408,7 @@ func _on_detail_call_pressed():
 		return
 	
 	detail_screen.visible = false
+	phone_panel.visible = true
 	_on_contact_call_pressed(current_detail_contact_id)
 
 func _on_detail_favorite_pressed():
