@@ -52,43 +52,50 @@ func setup_dialogue_map():
 	# Створюємо WorldmapNodeData для кожного вузла
 	var node_data_0 = WorldmapNodeData.new()
 	node_data_0.name = "Головне меню"
+	node_data_0.id = "main_menu"
 	node_data_0.cost = 1.0
 	
 	var node_data_1 = WorldmapNodeData.new()
 	node_data_1.name = "Перша проба"
+	node_data_1.id = "перша_проба"
 	node_data_1.cost = 1.0
 	
 	var node_data_2 = WorldmapNodeData.new()
 	node_data_2.name = "Джин Толік"
+	node_data_2.id = "джин_толік"
 	node_data_2.cost = 1.0
 	
-	# Додаємо вузли на граф
-	# Позиції: горизонтально, з інтервалом 300 пікселів
-	dialogue_graph.node_datas = [node_data_0, node_data_1, node_data_2]
-	dialogue_graph.node_positions = [
-		Vector2(200, 300),   # main_menu
-		Vector2(500, 300),   # перша_проба
-		Vector2(800, 300)    # джин_толік
-	]
+	# Встановлюємо кількість вузлів
+	dialogue_graph.set("node_count", 3)
+	
+	# Встановлюємо дані та позиції для кожного вузла
+	dialogue_graph.set("node_0/data", node_data_0)
+	dialogue_graph.set("node_0/position", Vector2(200, 300))
+	
+	dialogue_graph.set("node_1/data", node_data_1)
+	dialogue_graph.set("node_1/position", Vector2(500, 300))
+	
+	dialogue_graph.set("node_2/data", node_data_2)
+	dialogue_graph.set("node_2/position", Vector2(800, 300))
+	
+	# Встановлюємо кількість з'єднань
+	dialogue_graph.set("connection_count", 2)
 	
 	# З'єднуємо вузли лінійно (0 -> 1 -> 2)
-	dialogue_graph.connection_nodes = [
-		Vector2i(0, 1),  # main_menu -> перша_проба
-		Vector2i(1, 2)   # перша_проба -> джин_толік
-	]
-	dialogue_graph.connection_costs = [
-		Vector2(1, INF),  # Односторонній зв'язок
-		Vector2(1, INF)   # Односторонній зв'язок
-	]
+	dialogue_graph.set("connection_0/nodes", Vector2i(0, 1))  # main_menu -> перша_проба
+	dialogue_graph.set("connection_0/costs", Vector2(1, INF))  # Односторонній зв'язок
+	
+	dialogue_graph.set("connection_1/nodes", Vector2i(1, 2))  # перша_проба -> джин_толік
+	dialogue_graph.set("connection_1/costs", Vector2(1, INF))  # Односторонній зв'язок
 	
 	# Оновлюємо відображення
 	dialogue_graph.queue_redraw()
 	worldmap_view.queue_redraw()
 	
 	print("Карта діалогів створена:")
-	print("  0: main_menu")
-	print("  1: перша_проба")
-	print("  2: джин_толік")
+	print("  0: main_menu (Головне меню)")
+	print("  1: перша_проба (Перша проба)")
+	print("  2: джин_толік (Джин Толік)")
 
 func _on_node_clicked(event: InputEvent, path: NodePath, node_index: int, resource: WorldmapNodeData):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
