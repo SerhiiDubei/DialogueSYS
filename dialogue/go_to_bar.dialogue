@@ -1,0 +1,43 @@
+~ go_to_bar
+
+NPC: ВАУ! Ти поговорив з усіма чотирма друзями!
+NPC: Тепер можна йти в бар і продовжити вечір!
+
+NPC: Ось хто погодився піти з тобою:
+if game_state.agreed_alex
+	NPC: ✅ Алекс - готовий!
+else
+	NPC: ❌ Алекс - відмовився
+	
+if game_state.agreed_bohdan
+	NPC: ✅ Богдан - готовий!
+else
+	NPC: ❌ Богдан - відмовився
+	
+if game_state.agreed_dana
+	NPC: ✅ Дана - готова!
+else
+	NPC: ❌ Дана - відмовилась
+	
+if game_state.agreed_ira
+	NPC: ✅ Іра - готова!
+else
+	NPC: ❌ Іра - відмовилась
+
+NPC: Загалом {game_state.get_agreed_count()} з 4 друзів погодились!
+
+if game_state.get_agreed_count() >= 3
+	NPC: Це чудовий результат! Вечірка буде класною!
+elif game_state.get_agreed_count() >= 2
+	NPC: Непоганий результат! Буде весело!
+else
+	NPC: Ну що ж, хоч хтось погодився...
+
+NPC: Дякую за гру! Це була демонстрація діалогової системи.
+
+- Повернутись в головне меню
+	=> main_menu
+- Почати заново (скинути прогрес)
+	do game_state.save_system.reset_progress()
+	NPC: Прогрес скинуто! Можеш пройти знову.
+	=> main_menu
