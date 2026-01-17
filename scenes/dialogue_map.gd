@@ -120,12 +120,22 @@ func setup_dialogue_map():
 	
 	# Оновлюємо відображення
 	dialogue_graph.queue_redraw()
+	
+	# Важливо: викликаємо recalculate_map() для WorldmapView, щоб він правильно ініціалізував стан
+	await get_tree().process_frame
+	worldmap_view.recalculate_map()
+	
+	# Активуємо перший вузол (головне меню), щоб інші стали доступними
+	var graph_path = worldmap_view.get_path_to(dialogue_graph)
+	worldmap_view.set_node_state(graph_path, 0, 1)
+	
 	worldmap_view.queue_redraw()
 	
 	print("Карта діалогів створена:")
-	print("  0: main_menu (Головне меню)")
+	print("  0: main_menu (Головне меню) - АКТИВНО")
 	print("  1: перша_проба (Перша проба)")
 	print("  2: джин_толік (Джин Толік)")
+	print("Вузли готові до використання")
 
 func _on_node_clicked(event: InputEvent, path: NodePath, node_index: int, resource: WorldmapNodeData):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
