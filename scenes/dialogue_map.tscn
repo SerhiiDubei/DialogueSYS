@@ -1,9 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dialogue_map_scene"]
+[gd_scene load_steps=2 format=3 uid="uid://cafnlch5ol4cy"]
 
-[ext_resource type="Script" path="res://scenes/dialogue_map.gd" id="1_dialogue_map"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.1, 0.1, 0.15, 1)
+[ext_resource type="Script" uid="uid://rq7yy7nmikpm" path="res://scenes/dialogue_map.gd" id="1_dialogue_map"]
 
 [node name="DialogueMap" type="Control"]
 layout_mode = 3
@@ -21,29 +18,46 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1, 0.99290943)
 color = Color(0.05, 0.05, 0.1, 1)
 
 [node name="WorldmapView" type="WorldmapView" parent="."]
+_import_path = NodePath("")
+unique_name_in_owner = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+hide_inactive = false
+unclickable_inactive = false
+script = null
 
 [node name="DialogueGraph" type="WorldmapGraph" parent="WorldmapView"]
+_import_path = NodePath("")
+unique_name_in_owner = false
+layout_mode = 1
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1000.0
+offset_bottom = 600.0
+grow_horizontal = 1
+grow_vertical = 1
 connection_mode = 1
 connection_min_length = 200.0
+script = null
 
 [node name="UI" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = -100.0
-offset_right = 300.0
-offset_bottom = -20.0
+offset_left = 426.0
+offset_top = -396.0
+offset_right = 894.0
+offset_bottom = -267.0
 grow_vertical = 0
 
 [node name="Title" type="Label" parent="UI"]
