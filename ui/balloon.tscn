@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b8k2m9n4p5q6r7s8t9u0v1w2x3y4z5"]
+[gd_scene load_steps=12 format=3 uid="uid://bkqwvq5j7pnbw"]
 
 [ext_resource type="Script" uid="uid://bfvllfqsmqfcf" path="res://ui/balloon.gd" id="1_36de5"]
 [ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="2_a8ve6"]
@@ -54,6 +54,7 @@ corner_radius_bottom_left = 5
 
 [sub_resource type="Theme" id="Theme_qq3yp"]
 default_font_size = 20
+Button/fonts/font = null
 Button/styles/disabled = SubResource("StyleBoxFlat_spyqn")
 Button/styles/focus = SubResource("StyleBoxFlat_ri4m3")
 Button/styles/hover = SubResource("StyleBoxFlat_e0njw")

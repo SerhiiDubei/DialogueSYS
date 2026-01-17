@@ -1,8 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://73jm5qjy52vq"]
+[gd_scene load_steps=15 format=3 uid="uid://73jm5qjy52vq"]
 
 [ext_resource type="Script" uid="uid://d1wt4ma6055l8" path="res://addons/dialogue_manager/example_balloon/example_balloon.gd" id="1_36de5"]
 [ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="2_a8ve6"]
 [ext_resource type="Script" uid="uid://bb52rsfwhkxbn" path="res://addons/dialogue_manager/dialogue_responses_menu.gd" id="3_72ixx"]
+[ext_resource type="Script" uid="uid://bfw3ldkpbv6r1" path="res://addons/worldmap_builder/nodes/worldmap_view.gd" id="4_kmygl"]
+[ext_resource type="Script" uid="uid://dgvxfl64wub1n" path="res://addons/worldmap_builder/nodes/worldmap_graph.gd" id="5_r5ei8"]
+[ext_resource type="Script" uid="uid://dr8ckx0ydbaus" path="res://addons/worldmap_builder/nodes/worldmap_path.gd" id="6_v42gu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_spyqn"]
 bg_color = Color(0, 0, 0, 1)
@@ -144,7 +147,7 @@ modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
-text = "Character"
+text = "Character "
 fit_content = true
 scroll_active = false
 
@@ -195,6 +198,26 @@ text = "Response example"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+
+[node name="WorldmapView" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("4_kmygl")
+metadata/_custom_type_script = "uid://bfw3ldkpbv6r1"
+
+[node name="WorldmapGraph" type="Node2D" parent="WorldmapView"]
+script = ExtResource("5_r5ei8")
+node_grid_snap = 1
+node_count = 0
+connection_count = 0
+metadata/_custom_type_script = "uid://dgvxfl64wub1n"
+
+[node name="WorldmapPath" type="Node2D" parent="WorldmapView"]
+script = ExtResource("6_v42gu")
+handle_2 = Vector2(inf, inf)
+node_grid_snap = 1
+node_count = 0
+metadata/_custom_type_script = "uid://dr8ckx0ydbaus"
 
 [connection signal="gui_input" from="Balloon" to="." method="_on_balloon_gui_input"]
 [connection signal="response_selected" from="Balloon/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]
