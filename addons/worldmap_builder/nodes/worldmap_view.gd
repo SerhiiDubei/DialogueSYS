@@ -268,7 +268,7 @@ func reset():
 	var initial_array := []
 	initial_array.resize(initial_item.get_node_count())
 	initial_array.fill(0)
-	initial_array[initial_node] = initial_node_value
+	initial_array[int(initial_node)] = int(initial_node_value)
 	recalculate_map()
 	load_state({get_path_to(initial_item) : initial_array})
 
