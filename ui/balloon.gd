@@ -384,10 +384,11 @@ func apply_dialogue_line() -> void:
 	
 	# Оновлюємо тип діалогу на основі поточного dialogue_line
 	# Якщо current_dialogue_title ще не встановлений, використовуємо логіку визначення
-	if current_dialogue_title.is_empty():
+	# Але НЕ змінюємо dialogue_type, якщо він вже встановлений (з start())
+	if current_dialogue_title.is_empty() and dialogue_type == DialogueType.REGULAR_DIALOGUE:
 		# За замовчуванням вважаємо, що це звичайний діалог (не main_menu)
 		current_dialogue_title = "other"
-		dialogue_type = DialogueType.REGULAR_DIALOGUE
+		# dialogue_type вже REGULAR_DIALOGUE за замовчуванням, тому не змінюємо
 		call_deferred("_setup_colors_by_type")
 	
 	# Застосовуємо стилі до нових кнопок після їх створення
