@@ -322,8 +322,11 @@ func _load_contacts_data():
 		if contacts.has(contact_id):
 			contacts[contact_id].favorite = true
 	
-	# Відновити блоковані
-	blocked = data.get("blocked", [])
+	# Відновити блоковані (явне приведення типів)
+	var loaded_blocked = data.get("blocked", [])
+	blocked.clear()
+	for item in loaded_blocked:
+		blocked.append(str(item))
 	
 	# Відновити статистику
 	var stats = data.get("contacts_stats", {})
