@@ -40,11 +40,12 @@ var current_dialogue_title: String = ""
 
 ## Тип діалогу (визначає стиль)
 enum DialogueType {
-	MAIN_MENU,      # Головне меню - синій стиль
-	REGULAR_DIALOGUE  # Звичайний діалог - червоний стиль
+	MAIN_MENU,           # Головне меню - синій стиль
+	CHARACTER_SELECTION, # Вибір персонажа - зелений стиль
+	DIALOGUE             # Звичайний діалог - червоний стиль
 }
 
-var dialogue_type: DialogueType = DialogueType.REGULAR_DIALOGUE
+var dialogue_type: DialogueType = DialogueType.DIALOGUE
 
 ## The current line
 var dialogue_line: DialogueLine:
@@ -110,23 +111,32 @@ func _setup_colors_for_type(type: DialogueType) -> void:
 	# Визначаємо колір ободка залежно від типу
 	var border_color: Color
 	var bg_color: Color
-	var is_main_menu: bool = (type == DialogueType.MAIN_MENU)
+	var type_name: String
 	
-	if is_main_menu:
+	if type == DialogueType.MAIN_MENU:
 		# СИНІЙ стиль для головного меню
 		border_color = Color(0.2, 0.5, 1.0, 1.0)  # Яскраво-синій
 		bg_color = Color(0.1, 0.15, 0.25, 1.0)  # Темно-синій фон
-		print("Налаштування кольорів для ГОЛОВНОГО МЕНЮ (синій стиль)...")  # Debug
+		type_name = "ГОЛОВНОГО МЕНЮ (синій)"
+	elif type == DialogueType.CHARACTER_SELECTION:
+		# ЗЕЛЕНИЙ стиль для вибору персонажа
+		border_color = Color(0.2, 1.0, 0.5, 1.0)  # Яскраво-зелений
+		bg_color = Color(0.1, 0.25, 0.15, 1.0)  # Темно-зелений фон
+		type_name = "ВИБОРУ ПЕРСОНАЖА (зелений)"
 	else:
 		# ЧЕРВОНИЙ стиль для звичайних діалогів
 		border_color = Color(1, 0, 0, 1)  # Червоний
 		bg_color = Color(0.2, 0.2, 0.3, 1.0)  # Темний фон
-		print("Налаштування кольорів для звичайного діалогу (червоний стиль)...")  # Debug
+		type_name = "ДІАЛОГУ (червоний)"
+	
+	print("Налаштування кольорів для ", type_name, "...")  # Debug
 	
 	# Змінити колір тексту імені персонажа
 	if character_label:
-		if is_main_menu:
+		if type == DialogueType.MAIN_MENU:
 			character_label.modulate = Color(0.7, 0.9, 1.0, 1.0)  # Світло-синій для меню
+		elif type == DialogueType.CHARACTER_SELECTION:
+			character_label.modulate = Color(0.7, 1.0, 0.85, 1.0)  # Світло-зелений для вибору персонажа
 		else:
 			character_label.modulate = Color(1, 1, 1, 0.8)  # Білий з прозорістю
 	
@@ -149,8 +159,10 @@ func _setup_colors_for_type(type: DialogueType) -> void:
 	
 	# Змінити колір індикатора Progress
 	if progress:
-		if is_main_menu:
+		if type == DialogueType.MAIN_MENU:
 			progress.color = Color(0.7, 0.9, 1.0, 0.8)  # Світло-синій для меню
+		elif type == DialogueType.CHARACTER_SELECTION:
+			progress.color = Color(0.7, 1.0, 0.85, 0.8)  # Світло-зелений для вибору персонажа
 		else:
 			progress.color = Color(1, 1, 1, 0.8)  # Білий індикатор
 	
@@ -159,10 +171,14 @@ func _setup_colors_for_type(type: DialogueType) -> void:
 	var bg_color_hover: Color
 	var bg_color_disabled: Color
 	
-	if is_main_menu:
+	if type == DialogueType.MAIN_MENU:
 		bg_color_normal = Color(0.15, 0.25, 0.4, 1)  # Темно-синій для меню
 		bg_color_hover = Color(0.25, 0.35, 0.5, 1)  # Світліший синій для меню
 		bg_color_disabled = Color(0.08, 0.12, 0.2, 1)  # Дуже темний синій для меню
+	elif type == DialogueType.CHARACTER_SELECTION:
+		bg_color_normal = Color(0.15, 0.3, 0.2, 1)  # Темно-зелений для вибору персонажа
+		bg_color_hover = Color(0.2, 0.4, 0.3, 1)  # Світліший зелений при наведенні
+		bg_color_disabled = Color(0.08, 0.15, 0.1, 1)  # Дуже темний зелений
 	else:
 		bg_color_normal = Color(0.2, 0.2, 0.3, 1)  # Темний фон кнопки
 		bg_color_hover = Color(0.3, 0.3, 0.4, 1)  # Світліший при наведенні
@@ -231,10 +247,7 @@ func _setup_colors_for_type(type: DialogueType) -> void:
 	balloon.add_theme_stylebox_override("focus", button_style_focus)
 	balloon.add_theme_stylebox_override("disabled", button_style_disabled)
 	
-	if is_main_menu:
-		print("Кольори налаштовано! СИНІЙ стиль для головного меню встановлено.")  # Debug
-	else:
-		print("Кольори налаштовано! ЧЕРВОНИЙ стиль для діалогу встановлено.")  # Debug
+	print("Кольори налаштовано! Стиль для ", type_name, " встановлено.")  # Debug
 
 
 ## Застосовує стилі до всіх кнопок відповідей
@@ -243,18 +256,23 @@ func _apply_button_styles() -> void:
 		return
 	
 	# Визначаємо колір ободка залежно від типу діалогу
-	var is_main_menu: bool = (dialogue_type == DialogueType.MAIN_MENU)
 	var border_color: Color
 	var bg_color_normal: Color
 	var bg_color_hover: Color
 	var bg_color_disabled: Color
 	
-	if is_main_menu:
+	if dialogue_type == DialogueType.MAIN_MENU:
 		# СИНІЙ стиль для головного меню
 		border_color = Color(0.2, 0.5, 1.0, 1.0)  # Яскраво-синій
 		bg_color_normal = Color(0.15, 0.25, 0.4, 1)
 		bg_color_hover = Color(0.25, 0.35, 0.5, 1)
 		bg_color_disabled = Color(0.08, 0.12, 0.2, 1)
+	elif dialogue_type == DialogueType.CHARACTER_SELECTION:
+		# ЗЕЛЕНИЙ стиль для вибору персонажа
+		border_color = Color(0.2, 1.0, 0.5, 1.0)  # Яскраво-зелений
+		bg_color_normal = Color(0.15, 0.3, 0.2, 1)
+		bg_color_hover = Color(0.2, 0.4, 0.3, 1)
+		bg_color_disabled = Color(0.08, 0.15, 0.1, 1)
 	else:
 		# ЧЕРВОНИЙ стиль для звичайних діалогів
 		border_color = Color(1, 0, 0, 1)  # Червоний
@@ -318,7 +336,7 @@ func _apply_button_styles() -> void:
 			child.add_theme_stylebox_override("hover", button_style_hover)
 			child.add_theme_stylebox_override("focus", button_style_focus)
 			child.add_theme_stylebox_override("disabled", button_style_disabled)
-			var color_name = "СИНІЙ" if is_main_menu else "ЧЕРВОНИЙ"
+			var color_name = "СИНІЙ" if dialogue_type == DialogueType.MAIN_MENU else ("ЗЕЛЕНИЙ" if dialogue_type == DialogueType.CHARACTER_SELECTION else "ЧЕРВОНИЙ")
 			print("Застосовано %s ободок до кнопки: %s" % [color_name, child.name])  # Debug
 	
 	print("Стилі кнопок застосовано!")  # Debug
@@ -356,8 +374,11 @@ func start(with_dialogue_resource: DialogueResource = null, title: String = "", 
 		# Визначаємо тип діалогу на основі title
 		if title == "main_menu":
 			dialogue_type = DialogueType.MAIN_MENU
+		elif title == "hub" or "talk_" in title:
+			# Якщо це hub або розмова з персонажем - це вибір персонажа
+			dialogue_type = DialogueType.CHARACTER_SELECTION
 		else:
-			dialogue_type = DialogueType.REGULAR_DIALOGUE
+			dialogue_type = DialogueType.DIALOGUE
 		# Оновлюємо стиль залежно від типу
 		call_deferred("_setup_colors_by_type")
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(start_from_title, temporary_game_states)
@@ -429,16 +450,19 @@ func apply_dialogue_line() -> void:
 ## Go to the next line
 func next(next_id: String) -> void:
 	# Оновлюємо тип діалогу перед переходом до наступної лінії
-	# Якщо next_id веде до main_menu, встановлюємо MAIN_MENU
-	# Якщо next_id веде до іншого title (наприклад, "перша_проба"), встановлюємо REGULAR_DIALOGUE
 	if next_id == "main_menu" or (next_id != "" and "main_menu" in next_id and next_id != "END" and next_id != "NULL"):
 		current_dialogue_title = "main_menu"
 		dialogue_type = DialogueType.MAIN_MENU
 		call_deferred("_setup_colors_by_type")
+	elif next_id == "hub" or "talk_" in next_id:
+		# Якщо це hub або розмова з персонажем - це вибір персонажа
+		current_dialogue_title = next_id
+		dialogue_type = DialogueType.CHARACTER_SELECTION
+		call_deferred("_setup_colors_by_type")
 	elif next_id != "" and next_id != "END" and next_id != "NULL":
 		# Якщо next_id веде до іншого title (не main_menu), це звичайний діалог
 		current_dialogue_title = "other"
-		dialogue_type = DialogueType.REGULAR_DIALOGUE
+		dialogue_type = DialogueType.DIALOGUE
 		call_deferred("_setup_colors_by_type")
 	
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
