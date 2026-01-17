@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ContactResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/contact_resource.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "alex"
+display_name = "Алекс 🍺"
+phone_number = "+380 99 234 5678"
+description = "Друг з бару. Завжди знає де весело."
+favorite = true
+tags = ["друзі", "бар"]
+status = 0
+call_type = 4
+dialogue_file = "res://dialogue/phone_calls/alex_call.dialogue"
+dialogue_start = "start"

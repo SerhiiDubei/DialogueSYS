@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ContactResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/contact_resource.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "unknown"
+display_name = "Невідомий"
+phone_number = "+380 99 999 9999"
+description = "Хто це?.."
+favorite = false
+tags = ["загадкові"]
+status = 2
+call_type = 0

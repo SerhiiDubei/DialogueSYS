@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ContactResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/contact_resource.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "old_friend"
+display_name = "Старий друг"
+phone_number = "+380 99 000 0000"
+description = "Давно не спілкувались..."
+favorite = false
+tags = ["старі знайомі"]
+status = 3
+call_type = 1

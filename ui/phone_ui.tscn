@@ -1,0 +1,136 @@
+[gd_scene load_steps=2 format=3 uid="uid://phone_ui_scene"]
+
+[ext_resource type="Script" path="res://ui/phone_ui.gd" id="1"]
+
+[node name="PhoneUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="PhonePanel" type="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -320.0
+offset_right = 180.0
+offset_bottom = 320.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PhonePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="TopBar" type="HBoxContainer" parent="PhonePanel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="Title" type="Label" parent="PhonePanel/VBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📱 Телефон"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="PhonePanel/VBox/TopBar"]
+layout_mode = 2
+text = "✕"
+
+[node name="SearchBar" type="LineEdit" parent="PhonePanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "🔍 Пошук..."
+
+[node name="TabBar" type="TabBar" parent="PhonePanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PhonePanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ContactList" type="VBoxContainer" parent="PhonePanel/VBox/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CallScreen" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CallScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -200.0
+offset_right = 150.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CallPhoto" type="TextureRect" parent="CallScreen/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CallName" type="Label" parent="CallScreen/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Contact Name"
+horizontal_alignment = 1
+
+[node name="CallStatus" type="Label" parent="CallScreen/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Calling..."
+horizontal_alignment = 1
+
+[node name="CallTimer" type="Label" parent="CallScreen/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "00:00"
+horizontal_alignment = 1
+
+[node name="HangupButton" type="Button" parent="CallScreen/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+text = "❌
+Завершити"
+
+[connection signal="pressed" from="PhonePanel/VBox/TopBar/CloseButton" to="." method="close_phone"]

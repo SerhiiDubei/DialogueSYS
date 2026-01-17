@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ContactResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/contact_resource.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "detective"
+display_name = "Детектив Джонс 🕵️"
+phone_number = "+380 99 777 7777"
+description = "Детектив. Розслідує справу."
+favorite = false
+tags = ["робота", "детектив"]
+status = 0
+call_type = 5
+dialogue_file = "res://dialogue/phone_calls/detective_call.dialogue"
+dialogue_start = "scene_1"
+condition_quest = "investigation"

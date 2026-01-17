@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ContactResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/contact_resource.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "mom"
+display_name = "Мама 💕"
+phone_number = "+380 99 123 4567"
+description = "Моя мама. Завжди турбується."
+favorite = true
+tags = ["родина", "важливо"]
+status = 0
+call_type = 2
+quick_messages = Array[String](["Алло, синку?", "Ти вже поїв?", "Передзвони пізніше, я в магазині!", "*Гудки*"])
