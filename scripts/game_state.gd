@@ -16,6 +16,10 @@ var agreed_ira: bool = false
 # Система збереження прогресу
 var save_system: SaveSystem
 
+# Тимчасові змінні для виводу в діалогах (бо {} не працює)
+var p_completed_count: int = 0
+var p_agreed_total: int = 0
+
 func _ready():
 	# Ініціалізуємо систему збереження
 	save_system = SaveSystem.new()
