@@ -32,8 +32,14 @@ func initialize_project_settings() -> void:
 		config_base_url.migrate_deprecated_1_5_0_base_url()
 	
 	# Version 1.6.0 cleanup - delete API key files and project settings
-	# Виконуємо міграцію відкладено, щоб уникнути помилок компіляції
-	call_deferred("_migrate_deprecated_api_keys")
+	# Міграція виконується відкладено, щоб уникнути помилок компіляції
+	# Використовуємо таймер для відкладеного виконання
+	var migration_timer = Timer.new()
+	migration_timer.wait_time = 0.1
+	migration_timer.one_shot = true
+	migration_timer.timeout.connect(_migrate_deprecated_api_keys)
+	add_child(migration_timer)
+	migration_timer.start()
 	
 	if ProjectSettings.get_setting(CONFIG_LLM_API, "").is_empty():
 		# In the future we can consider moving this back to simply:
