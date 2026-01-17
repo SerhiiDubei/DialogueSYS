@@ -84,57 +84,37 @@ NPC: З ким хочеш поговорити? (Пройдено: [[game_state.
 
 ~ hub_options
 
-if !game_state.save_system.has_talked_to("alex")
-	- Поговорити з Алексом
-		=> talk_alex
-
-if game_state.save_system.has_talked_to("alex")
-	- ✅ Алекс (вже говорили)
-		NPC: Ти вже говорив з Алексом. Він тебе запам'ятав!
-		=> hub_options
-
-if !game_state.save_system.has_talked_to("bohdan")
-	- Поговорити з Богданом
-		=> talk_bohdan
-
-if game_state.save_system.has_talked_to("bohdan")
-	- ✅ Богдан (вже говорили)
-		NPC: Ти вже говорив з Богданом. Він про тебе все знає!
-		=> hub_options
-
-if !game_state.save_system.has_talked_to("dana")
-	- Поговорити з Даною
-		=> talk_dana
-
-if game_state.save_system.has_talked_to("dana")
-	- ✅ Дана (вже говорили)
-		NPC: Ти вже говорив з Даною. Вона тебе пам'ятає!
-		=> hub_options
-
-if !game_state.save_system.has_talked_to("ira")
-	- Поговорити з Ірою
-		=> talk_ira
-
-if game_state.save_system.has_talked_to("ira")
-	- ✅ Іра (вже говорили)
-		NPC: Ти вже говорив з Ірою. Вона про тебе не забула!
-		=> hub_options
-
-if !game_state.save_system.all_characters_completed()
-	- 🍺 Відправитись в бар (ще не всі)
-		NPC: Почекай, ти ще не поговорив з усіма!
-		=> hub_options
-
-if game_state.save_system.all_characters_completed()
-	- 🍺 Відправитись в бар!
-		NPC: ВАУ! Ти поговорив з усіма чотирма! Можна йти в бар!
-		set game_state.p_agreed_total = game_state.get_agreed_count()
-		NPC: Загалом погодились: [[game_state.p_agreed_total]] з 4
-		- Почати заново
-			do game_state.save_system.reset_progress()
-			NPC: Прогрес скинуто!
-			=> main_menu
-
+- Поговорити з Алексом [if !game_state.save_system.has_talked_to("alex")]
+	=> talk_alex
+- ✅ Алекс (вже говорили) [if game_state.save_system.has_talked_to("alex")]
+	NPC: Ти вже говорив з Алексом. Він тебе запам'ятав!
+	=> hub_options
+- Поговорити з Богданом [if !game_state.save_system.has_talked_to("bohdan")]
+	=> talk_bohdan
+- ✅ Богдан (вже говорили) [if game_state.save_system.has_talked_to("bohdan")]
+	NPC: Ти вже говорив з Богданом. Він про тебе все знає!
+	=> hub_options
+- Поговорити з Даною [if !game_state.save_system.has_talked_to("dana")]
+	=> talk_dana
+- ✅ Дана (вже говорили) [if game_state.save_system.has_talked_to("dana")]
+	NPC: Ти вже говорив з Даною. Вона тебе пам'ятає!
+	=> hub_options
+- Поговорити з Ірою [if !game_state.save_system.has_talked_to("ira")]
+	=> talk_ira
+- ✅ Іра (вже говорили) [if game_state.save_system.has_talked_to("ira")]
+	NPC: Ти вже говорив з Ірою. Вона про тебе не забула!
+	=> hub_options
+- 🍺 Відправитись в бар (ще не всі) [if !game_state.save_system.all_characters_completed()]
+	NPC: Почекай, ти ще не поговорив з усіма!
+	=> hub_options
+- 🍺 Відправитись в бар! [if game_state.save_system.all_characters_completed()]
+	NPC: ВАУ! Ти поговорив з усіма чотирма! Можна йти в бар!
+	set game_state.p_agreed_total = game_state.get_agreed_count()
+	NPC: Загалом погодились: [[game_state.p_agreed_total]] з 4
+	- Почати заново
+		do game_state.save_system.reset_progress()
+		NPC: Прогрес скинуто!
+		=> main_menu
 - Перевірити статус (хто погодився)
 	=> status
 - Повернутись в головне меню
