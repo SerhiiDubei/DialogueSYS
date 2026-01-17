@@ -4,14 +4,17 @@ extends EditorScript
 ## Скрипт для налаштування OpenRouter API ключа
 ## Запустіть через Editor → Run Script
 ##
+## ✅ API ключ вже вставлено!
+##
 ## ІНСТРУКЦІЯ:
-## 1. Замініть "YOUR_API_KEY_HERE" на свій API ключ від OpenRouter
-## 2. Відкрийте Editor → Run Script
-## 3. Виберіть цей файл та натисніть Run
+## 1. Відкрийте Editor → Run Script
+## 2. Виберіть цей файл (setup_openrouter_api.gd)
+## 3. Натисніть Run
+## 4. Після успішного виконання відкрийте AI Hub та виберіть OpenRouter
 
 func _run() -> void:
 	# ⬇️⬇️⬇️ ВСТАВТЕ СВІЙ API КЛЮЧ СЮДИ ⬇️⬇️⬇️
-	var api_key = "YOUR_API_KEY_HERE"  # <-- ЗАМІНІТЬ НА СВІЙ КЛЮЧ!
+	var api_key = "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"
 	# ⬆️⬆️⬆️ ВСТАВТЕ СВІЙ API КЛЮЧ СЮДИ ⬆️⬆️⬆️
 	
 	if api_key == "YOUR_API_KEY_HERE" or api_key.is_empty():
