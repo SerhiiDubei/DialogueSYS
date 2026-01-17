@@ -123,7 +123,7 @@ func _on_contact_call_pressed(contact_id: String):
 	
 	PhoneSystemManager.make_call(contact_id)
 
-func _on_call_started(contact_id: String, contact: ContactResource):
+func _on_call_started(_contact_id: String, contact: ContactResource):
 	# Дзвінок почався
 	current_contact = contact
 	
@@ -149,7 +149,7 @@ func _on_call_started(contact_id: String, contact: ContactResource):
 		5:  # MultiScene
 			_handle_multi_scene_dialogue()
 
-func _on_call_ended(contact_id: String, success: bool):
+func _on_call_ended(_contact_id: String, _success: bool):
 	# Дзвінок завершено
 	call_timer_active = false
 	await get_tree().create_timer(0.5).timeout
@@ -283,7 +283,7 @@ func _update_call_timer():
 ## ПОДІЇ UI
 ## ==========================================
 
-func _on_search_changed(new_text: String):
+func _on_search_changed(_new_text: String):
 	# Пошук змінився
 	_refresh_list()
 
