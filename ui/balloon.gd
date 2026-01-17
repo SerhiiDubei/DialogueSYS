@@ -457,20 +457,26 @@ func apply_dialogue_line() -> void:
 
 ## Go to the next line
 func next(next_id: String) -> void:
+	# DEBUG: показуємо перехід
+	print("🔄 Перехід до next_id: '", next_id, "'")
+	
 	# Оновлюємо тип діалогу перед переходом до наступної лінії
 	if next_id == "main_menu" or (next_id != "" and "main_menu" in next_id and next_id != "END" and next_id != "NULL"):
 		current_dialogue_title = "main_menu"
 		dialogue_type = DialogueType.MAIN_MENU
+		print("   → Змінюю на: MAIN_MENU (синій)")
 		call_deferred("_setup_colors_by_type")
-	elif next_id == "hub" or "talk_" in next_id:
+	elif next_id == "hub" or (next_id.begins_with("talk_") if next_id != "" else false):
 		# Якщо це hub або розмова з персонажем - це вибір персонажа
 		current_dialogue_title = next_id
 		dialogue_type = DialogueType.CHARACTER_SELECTION
+		print("   → Змінюю на: CHARACTER_SELECTION (зелений)")
 		call_deferred("_setup_colors_by_type")
 	elif next_id != "" and next_id != "END" and next_id != "NULL":
 		# Якщо next_id веде до іншого title (не main_menu), це звичайний діалог
 		current_dialogue_title = "other"
 		dialogue_type = DialogueType.DIALOGUE
+		print("   → Змінюю на: DIALOGUE (червоний)")
 		call_deferred("_setup_colors_by_type")
 	
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
