@@ -26,6 +26,7 @@ const CONTACTS_FOLDER: String = "res://contacts/"
 func _ready():
 	print("📱 PhoneSystemManager готовий!")
 	_load_contacts_from_folder()
+	_load_contacts_data()  # Завантажити збережені дані (обране, статистику)
 	_load_call_history()
 
 ## ==========================================
