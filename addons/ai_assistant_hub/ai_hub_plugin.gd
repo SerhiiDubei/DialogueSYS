@@ -28,12 +28,10 @@ func initialize_project_settings() -> void:
 	# Version 1.6.0 cleanup - Migrate base URL from global setting to per LLM setting
 	var api_id :String = ProjectSettings.get_setting(AIHubPlugin.CONFIG_LLM_API, "")
 	if not api_id.is_empty():
-		# Перевіряємо, чи клас доступний перед використанням
-		var config_class = load("res://addons/ai_assistant_hub/llm_config_manager.gd")
-		if config_class:
-			var config_base_url = config_class.new(api_id)
-			if config_base_url and config_base_url.has_method("migrate_deprecated_1_5_0_base_url"):
-				config_base_url.migrate_deprecated_1_5_0_base_url()
+		# Використовуємо прямий виклик класу з обробкою помилок
+		var config_base_url = LLMConfigManager.new(api_id)
+		if config_base_url:
+			config_base_url.migrate_deprecated_1_5_0_base_url()
 	
 	# Version 1.6.0 cleanup - delete API key files and project settings
 	# Міграція пропускається при ініціалізації, щоб уникнути помилок компіляції
