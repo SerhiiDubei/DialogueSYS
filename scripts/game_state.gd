@@ -13,18 +13,16 @@ var agreed_bohdan: bool = false
 var agreed_dana: bool = false
 var agreed_ira: bool = false
 
-# Система збереження прогресу
-var save_system: SaveSystem
+# Посилання на системи (autoload)
+@onready var save_system: SaveSystem = get_node("/root/SaveSystem")
+@onready var dialogue_system: DialogueSystemManager = get_node("/root/DialogueSystemManager")
 
 # Тимчасові змінні для виводу в діалогах (бо {} не працює)
 var p_completed_count: int = 0
 var p_agreed_total: int = 0
 
 func _ready():
-	# Ініціалізуємо систему збереження
-	save_system = SaveSystem.new()
-	save_system.name = "SaveSystem"
-	add_child(save_system)
+	print("✅ GameState готовий!")
 
 # Умови L2 для кожного персонажа
 func has_l2_alex() -> bool:

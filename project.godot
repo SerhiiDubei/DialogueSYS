@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
+SaveSystem="*res://scripts/save_system.gd"
+DialogueSystemManager="*res://scripts/dialogue_system_manager.gd"
 
 [display]
 

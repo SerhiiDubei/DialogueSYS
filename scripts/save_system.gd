@@ -11,6 +11,10 @@ var completed_dialogues: Array[String] = []
 # Персонажі, з якими поговорили
 var talked_characters: Array[String] = []
 
+func _ready():
+	load_game_data()
+	print("✅ SaveSystem готовий!")
+
 # Чи досягнуто ліміт розмов (2 з 4)
 func all_characters_completed() -> bool:
 	return talked_characters.size() >= MAX_CONVERSATIONS
