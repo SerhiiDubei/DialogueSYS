@@ -93,7 +93,7 @@ func _ready() -> void:
 	add_child(mutation_cooldown)
 	
 	# Налаштування кольорів контейнерів (викликаємо після того, як всі елементи готові)
-	# За замовчуванням використовуємо червоний стиль (REGULAR_DIALOGUE)
+	# За замовчуванням використовуємо червоний стиль (DIALOGUE)
 	call_deferred("_setup_colors_by_type")
 
 	if auto_start:
