@@ -137,20 +137,20 @@ func setup_dialogue_map():
 	print("  2: джин_толік (Джин Толік)")
 	print("Вузли готові до використання")
 
-func _on_node_clicked(event: InputEvent, path: NodePath, node_index: int, resource: WorldmapNodeData):
+func _on_node_clicked(event: InputEvent, path: NodePath, node_in_path: int, resource: WorldmapNodeData):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		# Клік по вузлу - запускаємо діалог
-		if node_index in node_to_dialogue:
-			var dialogue_title = node_to_dialogue[node_index]
+		if node_in_path in node_to_dialogue:
+			var dialogue_title = node_to_dialogue[node_in_path]
 			start_dialogue(dialogue_title)
 
-func _on_node_hovered(path: NodePath, node_index: int, resource: WorldmapNodeData):
+func _on_node_hovered(path: NodePath, node_in_path: int, resource: WorldmapNodeData):
 	# Показуємо назву діалогу при наведенні
-	if node_index in node_to_dialogue:
-		var dialogue_title = node_to_dialogue[node_index]
+	if node_in_path in node_to_dialogue:
+		var dialogue_title = node_to_dialogue[node_in_path]
 		current_dialogue_label.text = "Поточний діалог: " + dialogue_title
 
-func _on_node_exited(path: NodePath, node_index: int, resource: WorldmapNodeData):
+func _on_node_exited(path: NodePath, node_in_path: int, resource: WorldmapNodeData):
 	# Очищаємо текст при виході
 	current_dialogue_label.text = "Поточний діалог: -"
 
