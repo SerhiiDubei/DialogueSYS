@@ -83,7 +83,9 @@ var mutation_cooldown: Timer = Timer.new()
 
 func _ready() -> void:
 	balloon.hide()
-	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
+	var dialogue_manager = Engine.get_singleton("DialogueManager")
+	dialogue_manager.mutated.connect(_on_mutated)
+	dialogue_manager.passed_title.connect(_on_passed_title)
 
 	# If the responses menu doesn't have a next action set, use this one
 	if responses_menu.next_action.is_empty():
@@ -522,6 +524,24 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 
 func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 	next(response.next_id)
+
+
+func _on_passed_title(title: String) -> void:
+	# Цей сигнал викликається коли діалог переходить до нового title
+	print("📍 Перейшли до title: '", title, "'")
+	
+	if title == "main_menu":
+		dialogue_type = DialogueType.MAIN_MENU
+		print("   → Змінюю на: MAIN_MENU (синій)")
+		call_deferred("_setup_colors_by_type")
+	elif title == "hub" or title.begins_with("talk_"):
+		dialogue_type = DialogueType.CHARACTER_SELECTION
+		print("   → Змінюю на: CHARACTER_SELECTION (зелений)")
+		call_deferred("_setup_colors_by_type")
+	else:
+		dialogue_type = DialogueType.DIALOGUE
+		print("   → Змінюю на: DIALOGUE (червоний)")
+		call_deferred("_setup_colors_by_type")
 
 
 #endregion
