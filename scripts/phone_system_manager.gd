@@ -359,4 +359,8 @@ func _load_call_history():
 	
 	var data = JSON.parse_string(content)
 	if data and data is Array:
-		recent_calls = data
+		# Явне приведення типів Array -> Array[Dictionary]
+		recent_calls.clear()
+		for item in data:
+			if item is Dictionary:
+				recent_calls.append(item)
