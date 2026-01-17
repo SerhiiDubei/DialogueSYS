@@ -2,19 +2,26 @@ extends Node
 class_name SaveSystem
 ## Система збереження прогресу діалогів
 
+# ⚠️ ЛІМІТ: можна говорити тільки з 2 персонажами з 4!
+const MAX_CONVERSATIONS: int = 2
+
 # Пройдені діалоги
 var completed_dialogues: Array[String] = []
 
 # Персонажі, з якими поговорили
 var talked_characters: Array[String] = []
 
-# Чи всі персонажі пройдені
+# Чи досягнуто ліміт розмов (2 з 4)
 func all_characters_completed() -> bool:
-	var required_characters = ["alex", "bohdan", "dana", "ira"]
-	for character in required_characters:
-		if not character in talked_characters:
-			return false
-	return true
+	return talked_characters.size() >= MAX_CONVERSATIONS
+
+# Чи є ще спроби для розмов?
+func has_conversations_left() -> bool:
+	return talked_characters.size() < MAX_CONVERSATIONS
+
+# Чи можна говорити з новим персонажем?
+func can_talk_to_new_character() -> bool:
+	return has_conversations_left()
 
 # Відмітити діалог як пройдений
 func mark_dialogue_completed(dialogue_id: String) -> void:
@@ -26,9 +33,9 @@ func mark_dialogue_completed(dialogue_id: String) -> void:
 func mark_character_talked(character_name: String) -> void:
 	if not character_name in talked_characters:
 		talked_characters.append(character_name)
-		print("✅ Поговорили з: ", character_name)
+		print("✅ Поговорили з: ", character_name, " (", talked_characters.size(), "/", MAX_CONVERSATIONS, ")")
 		if all_characters_completed():
-			print("🎉 ВСІ ПЕРСОНАЖІ ПРОЙДЕНІ! Можна йти в бар!")
+			print("⚠️ ЛІМІТ ДОСЯГНУТО! Використано всі ", MAX_CONVERSATIONS, " спроби. Можна йти в бар!")
 
 # Перевірити чи діалог пройдений
 func is_dialogue_completed(dialogue_id: String) -> bool:
