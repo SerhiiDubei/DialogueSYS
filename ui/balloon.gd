@@ -1,5 +1,6 @@
 extends CanvasLayer
 ## A basic dialogue balloon for use with Dialogue Manager.
+## Використовує класи для різних типів діалогів: MainMenuBalloon, RegularDialogueBalloon
 
 
 ## The dialogue resource
@@ -36,6 +37,14 @@ var _locale: String = TranslationServer.get_locale()
 
 ## Поточний title діалогу (для визначення стилю)
 var current_dialogue_title: String = ""
+
+## Тип діалогу (визначає стиль)
+enum DialogueType {
+	MAIN_MENU,      # Головне меню - синій стиль
+	REGULAR_DIALOGUE  # Звичайний діалог - червоний стиль
+}
+
+var dialogue_type: DialogueType = DialogueType.REGULAR_DIALOGUE
 
 ## The current line
 var dialogue_line: DialogueLine:
@@ -83,8 +92,8 @@ func _ready() -> void:
 	add_child(mutation_cooldown)
 	
 	# Налаштування кольорів контейнерів (викликаємо після того, як всі елементи готові)
-	# За замовчуванням використовуємо червоний стиль
-	call_deferred("_setup_colors", "default")
+	# За замовчуванням використовуємо червоний стиль (REGULAR_DIALOGUE)
+	call_deferred("_setup_colors_by_type")
 
 	if auto_start:
 		if not is_instance_valid(dialogue_resource):
@@ -92,13 +101,16 @@ func _ready() -> void:
 		start()
 
 
-## Налаштування кольорів UI контейнерів
-## title: назва діалогу ("main_menu" для головного меню, інше - для звичайних діалогів)
-func _setup_colors(title: String = "default") -> void:
-	# Визначаємо колір ободка залежно від title
+## Налаштування кольорів UI контейнерів на основі типу діалогу
+func _setup_colors_by_type() -> void:
+	_setup_colors_for_type(dialogue_type)
+
+## Налаштування кольорів UI контейнерів для конкретного типу
+func _setup_colors_for_type(type: DialogueType) -> void:
+	# Визначаємо колір ободка залежно від типу
 	var border_color: Color
 	var bg_color: Color
-	var is_main_menu: bool = (title == "main_menu")
+	var is_main_menu: bool = (type == DialogueType.MAIN_MENU)
 	
 	if is_main_menu:
 		# СИНІЙ стиль для головного меню
@@ -349,8 +361,13 @@ func start(with_dialogue_resource: DialogueResource = null, title: String = "", 
 	if not title.is_empty():
 		start_from_title = title
 		current_dialogue_title = title  # Зберігаємо поточний title для визначення стилю
-		# Оновлюємо стиль залежно від title
-		call_deferred("_setup_colors", title)
+		# Визначаємо тип діалогу на основі title
+		if title == "main_menu":
+			dialogue_type = DialogueType.MAIN_MENU
+		else:
+			dialogue_type = DialogueType.REGULAR_DIALOGUE
+		# Оновлюємо стиль залежно від типу
+		call_deferred("_setup_colors_by_type")
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(start_from_title, temporary_game_states)
 	show()
 
@@ -373,12 +390,13 @@ func apply_dialogue_line() -> void:
 	responses_menu.hide()
 	responses_menu.responses = dialogue_line.responses
 	
-	# Оновлюємо current_dialogue_title на основі поточного dialogue_line
+	# Оновлюємо тип діалогу на основі поточного dialogue_line
 	# Якщо current_dialogue_title ще не встановлений, використовуємо логіку визначення
 	if current_dialogue_title.is_empty():
 		# За замовчуванням вважаємо, що це звичайний діалог (не main_menu)
 		current_dialogue_title = "other"
-		call_deferred("_setup_colors", "other")
+		dialogue_type = DialogueType.REGULAR_DIALOGUE
+		call_deferred("_setup_colors_by_type")
 	
 	# Застосовуємо стилі до нових кнопок після їх створення
 	await get_tree().process_frame
@@ -417,18 +435,18 @@ func apply_dialogue_line() -> void:
 
 ## Go to the next line
 func next(next_id: String) -> void:
-	# Оновлюємо current_dialogue_title перед переходом до наступної лінії
-	# Якщо next_id веде до main_menu, встановлюємо current_dialogue_title = "main_menu"
-	# Якщо next_id веде до іншого title (наприклад, "перша_проба"), встановлюємо current_dialogue_title = "other"
-	if next_id == "main_menu" or "main_menu" in next_id:
+	# Оновлюємо тип діалогу перед переходом до наступної лінії
+	# Якщо next_id веде до main_menu, встановлюємо MAIN_MENU
+	# Якщо next_id веде до іншого title (наприклад, "перша_проба"), встановлюємо REGULAR_DIALOGUE
+	if next_id == "main_menu" or (next_id != "" and "main_menu" in next_id and next_id != "END" and next_id != "NULL"):
 		current_dialogue_title = "main_menu"
-		call_deferred("_setup_colors", "main_menu")
+		dialogue_type = DialogueType.MAIN_MENU
+		call_deferred("_setup_colors_by_type")
 	elif next_id != "" and next_id != "END" and next_id != "NULL":
 		# Якщо next_id веде до іншого title (не main_menu), це звичайний діалог
-		# Перевіряємо, чи це не повернення до main_menu
-		if not ("main_menu" in next_id):
-			current_dialogue_title = "other"
-			call_deferred("_setup_colors", "other")
+		current_dialogue_title = "other"
+		dialogue_type = DialogueType.REGULAR_DIALOGUE
+		call_deferred("_setup_colors_by_type")
 	
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
 
