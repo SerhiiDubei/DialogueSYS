@@ -32,22 +32,59 @@ func initialize_project_settings() -> void:
 		config_base_url.migrate_deprecated_1_5_0_base_url()
 	
 	# Version 1.6.0 cleanup - delete API key files and project settings
+	# Виконуємо міграцію з використанням прямих значень констант
 	var config_gemini = LLMConfigManager.new("gemini_api")
 	var dummy := LLMProviderResource.new()
 	dummy.api_id = "dummy"
-	config_gemini.migrate_deprecated_1_5_0_api_key(
-		(GeminiAPI.new(dummy)).get_deprecated_api_key(),
-		GeminiAPI.DEPRECATED_API_KEY_SETTING,
-		GeminiAPI.DEPRECATED_API_KEY_FILE)
+	
+	# Спробуємо створити GeminiAPI, якщо він доступний
+	var gemini_script = load("res://addons/ai_assistant_hub/llm_apis/gemini_api.gd")
+	if gemini_script:
+		var gemini_api = gemini_script.new(dummy)
+		if gemini_api:
+			var old_key = ""
+			if ProjectSettings.has_setting("plugins/ai_assistant_hub/gemini_api_key"):
+				old_key = ProjectSettings.get_setting("plugins/ai_assistant_hub/gemini_api_key", "")
+			if old_key.is_empty() and FileAccess.file_exists("res://addons/ai_assistant_hub/llm_apis/gemini_api_key.gd"):
+				var file = FileAccess.open("res://addons/ai_assistant_hub/llm_apis/gemini_api_key.gd", FileAccess.READ)
+				if file:
+					old_key = file.get_as_text().strip_edges()
+					file.close()
+			if not old_key.is_empty():
+				config_gemini.save_key(old_key)
+				ProjectSettings.set_setting("plugins/ai_assistant_hub/gemini_api_key", null)
+				ProjectSettings.save()
+	
 	var config_openrouter = LLMConfigManager.new("openrouter_api")
-	config_openrouter.migrate_deprecated_1_5_0_api_key(
-		OpenRouterAPI.new(dummy).get_deprecated_api_key(),
-		OpenRouterAPI.DEPRECATED_API_KEY_SETTING,
-		OpenRouterAPI.DEPRECATED_API_KEY_FILE)
+	var openrouter_script = load("res://addons/ai_assistant_hub/llm_apis/openrouter_api.gd")
+	if openrouter_script:
+		var openrouter_api = openrouter_script.new(dummy)
+		if openrouter_api:
+			var old_key = ""
+			if ProjectSettings.has_setting("plugins/ai_assistant_hub/openrouter_api_key"):
+				old_key = ProjectSettings.get_setting("plugins/ai_assistant_hub/openrouter_api_key", "")
+			if old_key.is_empty() and FileAccess.file_exists("res://addons/ai_assistant_hub/llm_apis/openrouter_api_key.gd"):
+				var file = FileAccess.open("res://addons/ai_assistant_hub/llm_apis/openrouter_api_key.gd", FileAccess.READ)
+				if file:
+					old_key = file.get_as_text().strip_edges()
+					file.close()
+			if not old_key.is_empty():
+				config_openrouter.save_key(old_key)
+				ProjectSettings.set_setting("plugins/ai_assistant_hub/openrouter_api_key", null)
+				ProjectSettings.save()
+	
 	var config_openwebui = LLMConfigManager.new("openwebui_api")
-	config_openwebui.migrate_deprecated_1_5_0_api_key(
-		OpenWebUIAPI.new(dummy).get_deprecated_api_key(),
-		OpenWebUIAPI.DEPRECATED_API_KEY_SETTING)
+	var openwebui_script = load("res://addons/ai_assistant_hub/llm_apis/openwebui_api.gd")
+	if openwebui_script:
+		var openwebui_api = openwebui_script.new(dummy)
+		if openwebui_api:
+			var old_key = ""
+			if ProjectSettings.has_setting("plugins/ai_assistant_hub/openwebui_api_key"):
+				old_key = ProjectSettings.get_setting("plugins/ai_assistant_hub/openwebui_api_key", "")
+			if not old_key.is_empty():
+				config_openwebui.save_key(old_key)
+				ProjectSettings.set_setting("plugins/ai_assistant_hub/openwebui_api_key", null)
+				ProjectSettings.save()
 	
 	if ProjectSettings.get_setting(CONFIG_LLM_API, "").is_empty():
 		# In the future we can consider moving this back to simply:
