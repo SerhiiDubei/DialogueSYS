@@ -53,12 +53,17 @@ func _ready():
 	# Екран деталей
 	detail_back_button.pressed.connect(_on_detail_back_pressed)
 	detail_call_button.pressed.connect(_on_detail_call_pressed)
+	detail_chat_button.pressed.connect(_on_detail_chat_pressed)
 	detail_favorite_button.pressed.connect(_on_detail_favorite_pressed)
 	detail_block_button.pressed.connect(_on_detail_block_pressed)
 	
-	# Ховати екран дзвінку та деталей
+	# Підключити сигнал чату
+	chat_screen.back_pressed.connect(_on_chat_back_pressed)
+	
+	# Ховати екран дзвінку, деталей та чату
 	call_screen.visible = false
 	detail_screen.visible = false
+	chat_screen.visible = false
 	
 	# Налаштувати вкладки
 	tab_bar.add_tab("⭐ Обрані")
@@ -411,6 +416,22 @@ func _on_detail_call_pressed():
 	detail_screen.visible = false
 	phone_panel.visible = true
 	_on_contact_call_pressed(current_detail_contact_id)
+
+func _on_detail_chat_pressed():
+	# Відкрити чат з екрану деталей
+	if current_detail_contact_id.is_empty():
+		return
+	
+	# Ховати деталі, показати чат
+	detail_screen.visible = false
+	phone_panel.visible = false
+	chat_screen.visible = true
+	chat_screen.open_chat(current_detail_contact_id)
+
+func _on_chat_back_pressed():
+	# Повернутись з чату
+	chat_screen.visible = false
+	phone_panel.visible = true
 
 func _on_detail_favorite_pressed():
 	# Додати/видалити з обраного

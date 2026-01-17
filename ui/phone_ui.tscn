@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://phone_ui_scene"]
+[gd_scene load_steps=3 format=3 uid="uid://phone_ui_scene"]
 
 [ext_resource type="Script" path="res://ui/phone_ui.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://chat_screen_scene" path="res://ui/chat_screen.tscn" id="2_chat_screen"]
 
 [node name="PhoneUI" type="Control"]
 layout_mode = 3
@@ -256,6 +257,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "📞 Зателефонувати"
 
+[node name="ChatContactButton" type="Button" parent="ContactDetailScreen/ScrollContainer/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "💬 Написати"
+
 [node name="FavoriteButton" type="Button" parent="ContactDetailScreen/ScrollContainer/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
@@ -269,5 +277,15 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "🚫 Заблокувати"
+
+[node name="ChatScreen" parent="."]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+instance = ExtResource("2_chat_screen")
 
 [connection signal="pressed" from="PhonePanel/VBox/TopBar/CloseButton" to="." method="close_phone"]

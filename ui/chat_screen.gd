@@ -41,7 +41,7 @@ func open_chat(contact_id: String):
 	
 	# Налаштувати верхню панель
 	contact_name_label.text = current_contact.display_name
-	contact_status_label.text = "онлайн" if current_contact.status == "Available" else "був(ла) недавно"
+	contact_status_label.text = "онлайн" if str(current_contact.status) == "Available" else "був(ла) недавно"
 	avatar.texture = current_contact.photo if current_contact.photo else null
 	
 	# Завантажити повідомлення
