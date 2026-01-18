@@ -60,7 +60,7 @@ func _apply_setup():
 		# Перевірити чи вже підключено
 		if !call_button.pressed.is_connected(_on_call_pressed):
 			call_button.pressed.connect(_on_call_pressed)
-		call_button.disabled = !PhoneSystemManager.can_make_call(contact_id)
+		call_button.disabled = !PhoneSystemManager.can_call(contact_id)
 
 func _on_call_pressed():
 	call_pressed.emit()
