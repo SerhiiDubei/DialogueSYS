@@ -6,6 +6,7 @@ extends Node
 signal character_talked(character_id: String)
 signal limit_reached()
 signal all_conversations_completed()
+# Note: ці сигнали можуть бути використані іншими системами для реакції на події
 
 ## Конфігурація персонажів
 var characters: Dictionary = {}

@@ -11,15 +11,17 @@ const COLOR_OUTGOING = Color(0.5, 0.75, 1.0)    # Блакитний
 const COLOR_TEXT_INCOMING = Color(0, 0, 0)
 const COLOR_TEXT_OUTGOING = Color(1, 1, 1)
 
-func setup(message: ChatMessage, contact: ContactResource):
+func setup(message: ChatMessage, _contact: ContactResource):
 	# Налаштувати бульбашку
 	var is_outgoing = message.is_from_player()
 	
-	# Текст повідомлення
+	# Текст повідомлення (ЗБІЛЬШЕНИЙ ШРИФТ!)
 	message_text.text = message.text
+	message_text.add_theme_font_size_override("normal_font_size", 20)
 	
-	# Час
+	# Час (ЗБІЛЬШЕНИЙ!)
 	time_label.text = message.get_time_string()
+	time_label.add_theme_font_size_override("font_size", 16)
 	
 	# Стиль залежно від відправника
 	if is_outgoing:
@@ -30,14 +32,14 @@ func setup(message: ChatMessage, contact: ContactResource):
 		# Колір фону
 		var style = StyleBoxFlat.new()
 		style.bg_color = COLOR_OUTGOING
-		style.corner_radius_top_left = 15
-		style.corner_radius_top_right = 15
-		style.corner_radius_bottom_left = 15
-		style.corner_radius_bottom_right = 3
-		style.content_margin_left = 12
-		style.content_margin_right = 12
-		style.content_margin_top = 8
-		style.content_margin_bottom = 8
+		style.corner_radius_top_left = 20
+		style.corner_radius_top_right = 20
+		style.corner_radius_bottom_left = 20
+		style.corner_radius_bottom_right = 5
+		style.content_margin_left = 18
+		style.content_margin_right = 18
+		style.content_margin_top = 14
+		style.content_margin_bottom = 14
 		bubble_panel.add_theme_stylebox_override("panel", style)
 		
 		# Колір тексту
@@ -52,14 +54,14 @@ func setup(message: ChatMessage, contact: ContactResource):
 		# Колір фону
 		var style = StyleBoxFlat.new()
 		style.bg_color = COLOR_INCOMING
-		style.corner_radius_top_left = 15
-		style.corner_radius_top_right = 15
-		style.corner_radius_bottom_left = 3
-		style.corner_radius_bottom_right = 15
-		style.content_margin_left = 12
-		style.content_margin_right = 12
-		style.content_margin_top = 8
-		style.content_margin_bottom = 8
+		style.corner_radius_top_left = 20
+		style.corner_radius_top_right = 20
+		style.corner_radius_bottom_left = 5
+		style.corner_radius_bottom_right = 20
+		style.content_margin_left = 18
+		style.content_margin_right = 18
+		style.content_margin_top = 14
+		style.content_margin_bottom = 14
 		bubble_panel.add_theme_stylebox_override("panel", style)
 		
 		# Колір тексту

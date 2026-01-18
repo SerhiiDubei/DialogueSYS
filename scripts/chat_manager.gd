@@ -5,7 +5,7 @@ extends Node
 ## Сигнали
 signal message_received(contact_id: String, message: ChatMessage)
 signal message_sent(contact_id: String, message: ChatMessage)
-signal chat_opened(contact_id: String)
+signal chat_opened(contact_id: String)  # Для майбутньої аналітики
 signal new_unread_message(contact_id: String, count: int)
 
 ## Чати: Dictionary[contact_id -> Array[ChatMessage]]

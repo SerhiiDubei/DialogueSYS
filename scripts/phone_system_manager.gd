@@ -7,7 +7,7 @@ signal contact_called(contact_id: String)
 signal call_started(contact_id: String, contact: ContactResource)
 signal call_ended(contact_id: String, success: bool)
 signal contact_added(contact_id: String)
-signal contact_removed(contact_id: String)
+signal contact_removed(contact_id: String)  # Для майбутнього функціоналу
 signal contacts_loaded()
 
 ## Контакти
